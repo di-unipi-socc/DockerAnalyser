@@ -26,7 +26,6 @@ def on_message(repo_name, context):
             tag = list_tags[0] # take the first tag
 
 
-
         logger.info("Pulling image {0}:{1} ...".format(repo_name, tag))
         image = client_docker.images.pull(name=repo_name, tag=tag)
         tag = image.tags[0]
@@ -38,7 +37,6 @@ def on_message(repo_name, context):
         container = client_docker.containers.create(tag, entrypoint="sleep 1000000000")
         # start the container
         container.start()
-
 
         # list of software distributions found in the image.
         softwares = []
