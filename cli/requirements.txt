@@ -1,0 +1,6 @@
+click==6.7
+-e git+git@github.com:di-unipi-socc/DockerFinder.git@f15fdcd8387aab08757a6ab9265e5f23242022bf#egg=dockeran&subdirectory=cli
+-e git+git@github.com:di-unipi-socc/DockerFinder.git@f15fdcd8387aab08757a6ab9265e5f23242022bf#egg=dockeranalyser&subdirectory=cli
+gitdb2==2.0.0
+GitPython==2.1.1
+smmap2==2.0.1
