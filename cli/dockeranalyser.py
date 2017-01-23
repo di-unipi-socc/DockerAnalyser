@@ -1,21 +1,27 @@
-import click
-#from git import Repo
-from scripts.git import  pull_code
-import os
+from scripts.utils import  pull_code, find_compose_yml
+from scripts.mycompose import get_project
 import zipfile, urllib.request, shutil
+import os
+import click
+import docker
+
+client = docker.from_env()
+
+# WORKDIR_PATH ='WORKDIR_PATH'
 
 @click.group()
 def cli():
     pass
-    #click.echo("Click is working")
 
 @click.command()
 @click.option('--workdir', default="DockerAnalyser", help='Path where the folder of the project is downloaded.')
 @click.option('-lp','--lambda-package', default="deploy-package", help='Path to the folder that contains the lambda code and any dependencies.')
 def init(lambda_package, workdir):
-    #url = "https://github.com/di-unipi-socc/DockerFinder.git"
-    #branch = "dfcustom"
     path_deploy = workdir + "/analysis/pyFinder/pyfinder/deploy"
+    path_dockerfile_orchestrator = workdir + "/managment/"
+
+    # os.environ[WORKDIR_PATH] =  str(workdir)
+    # click.echo("Set invieronment variable: {0}".format(os.environ[WORKDIR_PATH]))
 
     if os.path.isdir(workdir):
         click.echo(click.style("Working directory already exist in: {} ".format(workdir),fg='red'))
@@ -40,9 +46,37 @@ def init(lambda_package, workdir):
     else:
         click.echo(echo.style("Lambda package folder: {0}  does not exist. ".format(lambda_package)))
 
+    with open(path_dockerfile_orchestrator+"Dockerfile_orchestrator") as dockerfile:
+        image = client.images.build(fileobj=dockerfile)#, dockerfile=path_dockerfile_orchestrator+"/Dockerfile_orchestrator")
+
+    client.containers.run(image['id'])
+
+    # find the docker compose file and build the images
+    # path_compose = find_compose_yml(workdir)
+    #
+    # project = get_project(path_compose)
+    # if project:
+    #     project.build()
+    #     click.echo(click.style("Images built from Docker compose", fg='green'))
+    # click.echo(click.style("Init the project before the build", fg='red'))
+
+    #service_names=None, no_cache=False, pull=False, force_rm=False):
+
 @click.command()
 def build():
-    pass
+    """
+    docker-compose build
+    """
+    # print(os.environ[WORKDIR_PATH])
+    # if os.environ[WORKDIR_PATH]:
+    #     workdir = os.environ[WORKDIR_PATH]
+    #     project = get_project(find_compose_yml(workdir))
+    #     project.build()
+    #     click.echo(click.style("Images built from Docker compose", fg='green'))
+    # else:
+    #     click.echo(click.style("$ init (before the build command)", fg='red'))
+
+
 
 @click.command()
 @click.option('--percentage', default=100, help="Number of images to be dowloaded form the Docker registry.")
@@ -79,6 +113,7 @@ def config():
 
 
 cli.add_command(init)
+cli.add_command(build)
 cli.add_command(start)
 cli.add_command(status)
 cli.add_command(config)
