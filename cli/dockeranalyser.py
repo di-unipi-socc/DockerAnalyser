@@ -27,6 +27,7 @@ def init(lambda_package, workdir):
         click.echo(click.style("Working directory already exist in: {} ".format(workdir),fg='red'))
         if click.confirm('Do you want overwrite the working directory?'):
             click.echo("Deleting working directory...")
+            shutil.rmtree(workdir, ignore_errors=False)
             pull_code(workdir, "https://github.com/di-unipi-socc/DockerFinder.git",  branch="dfcustom" )
             click.echo(click.style("Dowloaded completed",fg='green'))
     else:

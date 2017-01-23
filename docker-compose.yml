@@ -102,7 +102,6 @@ services:
     restart: on-failure:3
     volumes:
       - /data/db
-
     # /data/db is the deafult directory where mogno container store the databases.
 
 
@@ -114,7 +113,20 @@ services:
 #    #container_name: monitor
 #    build: management
 #    ports:
-#      - "3002:3002"
+# #      - "3002:3002"
+#   build:
+#     context: analysis
+#     dockerfile: ./Dockerfile_crawler
+#
+#      orchestrator:
+#        build:
+#          context: management
+#          dockerfile: Dockerfile_orchestrator
+  orchestrator:
+    build:
+      context: management
+      dockerfile: ./Dockerfile_orchestrator
+
 
 
 # volumes:

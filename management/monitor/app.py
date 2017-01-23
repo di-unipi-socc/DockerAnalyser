@@ -21,6 +21,11 @@ def index():
     return url
 
 
+@app.route("/build")
+def build():
+
+
+
 @app.route('/service/<servicename>/queue/<queuename>')
 def service(servicename, queuename):
     try:
