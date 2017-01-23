@@ -17,12 +17,9 @@ class Main(Resource):
         action = args['action']
 
 
-
-
-
 api.add_resource(Main, '/main')
 
 if __name__ == '__main__':
-
-
-    app.run(debug=True, port=3003)
+    print("ARITITITITI")
+    #debug=True,
+    app.run(host="0.0.0.0", port=3003)

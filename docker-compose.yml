@@ -126,6 +126,8 @@ services:
     build:
       context: management
       dockerfile: ./Dockerfile_orchestrator
+    ports:
+      - "3003:3003"
 
 
 

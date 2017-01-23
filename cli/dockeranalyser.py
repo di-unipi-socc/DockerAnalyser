@@ -16,9 +16,15 @@ def cli():
 @click.command()
 @click.option('--workdir', default="DockerAnalyser", help='Path where the folder of the project is downloaded.')
 @click.option('-lp','--lambda-package', default="deploy-package", help='Path to the folder that contains the lambda code and any dependencies.')
-def init(lambda_package, workdir):
+@click.option('--debug', default=True)
+def init(lambda_package, workdir, debug):
     path_deploy = workdir + "/analysis/pyFinder/pyfinder/deploy"
-    path_dockerfile_orchestrator = workdir + "/managment/"
+
+    path_dockerfile_orchestrator = ""
+    if debug:
+        path_dockerfile_orchestrator =   "/home/dido/github/DockerFinder/management"
+    else:
+        path_dockerfile_orchestrator = workdir + "/management/"
 
     # os.environ[WORKDIR_PATH] =  str(workdir)
     # click.echo("Set invieronment variable: {0}".format(os.environ[WORKDIR_PATH]))
@@ -47,19 +53,30 @@ def init(lambda_package, workdir):
     else:
         click.echo(echo.style("Lambda package folder: {0}  does not exist. ".format(lambda_package)))
 
-    with open(path_dockerfile_orchestrator+"Dockerfile_orchestrator") as dockerfile:
-        image = client.images.build(fileobj=dockerfile)#, dockerfile=path_dockerfile_orchestrator+"/Dockerfile_orchestrator")
+    #with open(path_dockerfile_orchestrator+"Dockerfile_orchestrator") as dockerfile:
+    #with open("/home/dido/github/DockerFinder/cli/DockerAnalyser/management/Dockerfile_orchestrator") as dockerfile:
+    #path_dockerfile_orchestrator = "/home/dido/github/DockerFinder/management/"
 
-    client.containers.run(image['id'])
+    click.echo(click.style("Dockerfile for orchestrator {0} . ".format(path_dockerfile_orchestrator)))
+    image = client.images.build(path=path_dockerfile_orchestrator, tag="image/orchestration", nocache=True, dockerfile="Dockerfile_orchestrator")
+
+
+    print(image.id)
+    c = client.containers.get("orchestration")
+    c.stop()
+    c.remove()
+    client.containers.run(image.id, name="orchestration", ports={'3003/tcp': 3003},detach=True)
 
     # find the docker compose file and build the images
     # path_compose = find_compose_yml(workdir)
-    #
     # project = get_project(path_compose)
     # if project:
-    #     project.build()
-    #     click.echo(click.style("Images built from Docker compose", fg='green'))
-    # click.echo(click.style("Init the project before the build", fg='red'))
+    #      project.remove_stopped(service_names=['orchestrator'])
+    #      project.stop(service_names=['orchestrator'])
+    #      project.build(service_names=['orchestrator'],force_rm=True)
+    #      click.echo(click.style("Images built from Docker compose", fg='green'))
+    #      container_list = project.up(service_names=['orchestrator'],  do_build=True,  detached=True)
+    #      click.echo("Container {} running detached ".format( container_list[0].name))
 
     #service_names=None, no_cache=False, pull=False, force_rm=False):
 
