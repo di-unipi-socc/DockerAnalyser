@@ -1,9 +1,11 @@
-from setuptools import setup
+from setuptools import setup, find_packages
+
 
 setup(
-    name='dockeranalyser',
+    name='cli',
     version='0.1',
-    py_modules=['dockeranalyser'],
+    packages=find_packages(),
+    include_package_data=True,
     install_requires=[
         'Click',
         'GitPython'
