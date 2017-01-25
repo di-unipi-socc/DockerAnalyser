@@ -1,25 +1,18 @@
-from flask import Flask
-from flask_restful import Resource, Api
-from flask_restful import reqparse
-
+from flask import Flask, request
+from flask_restful import  Api
+from orchestrator.resources.compose import Compose
+from orchestrator.common.mycompose import get_project
 
 app = Flask(__name__)
 api = Api(app)
 
+api.add_resource(Compose,'/app/<string:action>')
 
-# APP API
-class Main(Resource):
-
-    def get(self):
-        parser = reqparse.RequestParser()
-        parser.add_argument('action',type=str, help='Action cannot be converted')
-        args = parser.parse_args()
-        action = args['action']
+load_project()
 
 
-api.add_resource(Main, '/main')
+def load_project():
+
 
 if __name__ == '__main__':
-    print("ARITITITITI")
-    #debug=True,
-    app.run(host="0.0.0.0", port=3003)
+    app.run(host="0.0.0.0", debug=True, port=3003)

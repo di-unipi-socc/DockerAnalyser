@@ -1,0 +1,16 @@
+recursive-exclude analysis *
+
+recursive-exclude discovery *
+
+recursive-exclude storage *
+
+recursive-exclude docs *
+
+recursive-exclude docs
+
+recursive-exclude dockeranalyser.egg-info *
+
+recursive-exclude * __pycache__
+recursive-exclude * *.pyc
+recursive-exclude * *.pyo
+recursive-exclude * *.orig

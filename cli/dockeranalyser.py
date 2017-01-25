@@ -1,33 +1,33 @@
-from scripts.utils import  pull_code, find_compose_yml
-from scripts.mycompose import get_project
 import zipfile, urllib.request, shutil
 import os
 import click
-import docker
+from cli.core.utils import pull_code
+from cli.core.mycompose import get_project, find_yml_files
+import configparser
 
-client = docker.from_env()
+#import docker
+#from git import Repo
+#client = docker.from_env()
 
-# WORKDIR_PATH ='WORKDIR_PATH'
+APP_NAME = "dockeranalyser"
+
+def get_root_project():
+    # get_app_dir() read the deafault folder for the configuration file (~.config/dockeranalyser)
+    cfg = os.path.join(click.get_app_dir(APP_NAME), 'config.ini')
+    parser = configparser.ConfigParser()
+    parser.read(cfg)
+    return parser['project']['Root']
+
 
 @click.group()
 def cli():
-    pass
+    print(get_root_project())
 
 @click.command()
-@click.option('--workdir', default="DockerAnalyser", help='Path where the folder of the project is downloaded.')
 @click.option('-lp','--lambda-package', default="deploy-package", help='Path to the folder that contains the lambda code and any dependencies.')
-@click.option('--debug', default=True)
-def init(lambda_package, workdir, debug):
+def init(lambda_package):
+    workdir =  get_root_project()
     path_deploy = workdir + "/analysis/pyFinder/pyfinder/deploy"
-
-    path_dockerfile_orchestrator = ""
-    if debug:
-        path_dockerfile_orchestrator =   "/home/dido/github/DockerFinder/management"
-    else:
-        path_dockerfile_orchestrator = workdir + "/management/"
-
-    # os.environ[WORKDIR_PATH] =  str(workdir)
-    # click.echo("Set invieronment variable: {0}".format(os.environ[WORKDIR_PATH]))
 
     if os.path.isdir(workdir):
         click.echo(click.style("Working directory already exist in: {} ".format(workdir),fg='red'))
@@ -51,48 +51,24 @@ def init(lambda_package, workdir, debug):
                     shutil.copytree(lambda_package, path_deploy)
                     click.echo(click.style("Deploy package imported: {0}".format(path_deploy),fg='green'))
     else:
-        click.echo(echo.style("Lambda package folder: {0}  does not exist. ".format(lambda_package)))
-
-    #with open(path_dockerfile_orchestrator+"Dockerfile_orchestrator") as dockerfile:
-    #with open("/home/dido/github/DockerFinder/cli/DockerAnalyser/management/Dockerfile_orchestrator") as dockerfile:
-    #path_dockerfile_orchestrator = "/home/dido/github/DockerFinder/management/"
-
-    click.echo(click.style("Dockerfile for orchestrator {0} . ".format(path_dockerfile_orchestrator)))
-    image = client.images.build(path=path_dockerfile_orchestrator, tag="image/orchestration", nocache=True, dockerfile="Dockerfile_orchestrator")
-
-
-    print(image.id)
-    c = client.containers.get("orchestration")
-    c.stop()
-    c.remove()
-    client.containers.run(image.id, name="orchestration", ports={'3003/tcp': 3003},detach=True)
-
-    # find the docker compose file and build the images
-    # path_compose = find_compose_yml(workdir)
-    # project = get_project(path_compose)
-    # if project:
-    #      project.remove_stopped(service_names=['orchestrator'])
-    #      project.stop(service_names=['orchestrator'])
-    #      project.build(service_names=['orchestrator'],force_rm=True)
-    #      click.echo(click.style("Images built from Docker compose", fg='green'))
-    #      container_list = project.up(service_names=['orchestrator'],  do_build=True,  detached=True)
-    #      click.echo("Container {} running detached ".format( container_list[0].name))
-
-    #service_names=None, no_cache=False, pull=False, force_rm=False):
+        click.echo(click.style("Lambda package folder: {0}  does not exist. ".format(lambda_package)))
 
 @click.command()
-def build():
+@click.pass_obj
+def build(app):
     """
     docker-compose build
     """
-    # print(os.environ[WORKDIR_PATH])
-    # if os.environ[WORKDIR_PATH]:
-    #     workdir = os.environ[WORKDIR_PATH]
-    #     project = get_project(find_compose_yml(workdir))
-    #     project.build()
-    #     click.echo(click.style("Images built from Docker compose", fg='green'))
-    # else:
-    #     click.echo(click.style("$ init (before the build command)", fg='red'))
+
+    workdir =  get_root_project()
+    if os.path.isdir(workdir):
+        #matches = find_yml_files(workdir)
+        #print(matches)
+        project = get_project(workdir)
+        project.build()
+        click.echo(click.style("Images built from Docker compose", fg='green'))
+    else:
+        click.echo(click.style("You must initialize the project before. $ dockeranalyser init ", fg='red'))
 
 
 
@@ -100,7 +76,6 @@ def build():
 @click.option('--percentage', default=100, help="Number of images to be dowloaded form the Docker registry.")
 def start():
     click.echo('Start !')
-
 
 
 @click.command()
@@ -128,6 +103,8 @@ def config():
 #             print("memeber;" + zf.namelist()[0])
 #             zf.extractall("DockerAnalyser", members=[zf.namelist()[0]])
 #             #print(zf.namelist())
+
+
 
 
 cli.add_command(init)
