@@ -40,10 +40,7 @@ def service(servicename, queuename):
         return jsonify(
                 err=True,
                 msg="Error in connecting"+servicename
-                )
-
-
-
+  )
 
 def count_queue_msg(service, queue):
 

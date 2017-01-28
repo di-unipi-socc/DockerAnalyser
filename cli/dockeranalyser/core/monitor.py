@@ -1,5 +1,6 @@
 import pika
 import requests
+from  six import print_
 
 def count_queue_msg(service="127.0.0.1", queue="images"):
 
@@ -31,7 +32,22 @@ def count_analysed_images():
         else:
             self.logger.error(str(res.status_code) + " Error code. " + res.text)
     except requests.exceptions.ConnectionError as e:
-        self.logger.exception("ConnectionError: ")
+        logger.exception("ConnectionError: ")
     except:
-        self.logger.exception("Unexpected error:")
+        logger.exception("Unexpected error:")
+        raise
+
+def get_images():
+    """Get all the images descriptions."""
+    try:
+        url_api = "http://127.0.0.1:3000/api/images/"
+        res = requests.get(url_api)
+        if res.status_code == requests.codes.ok:
+            return res.json()
+        else:
+            print_(str(res.status_code) + " Error code. " + res.text)
+    except requests.exceptions.ConnectionError as e:
+        print_("ConnectionError: ")
+    except:
+        print_("Unexpected error:")
         raise

@@ -23,7 +23,23 @@ def get_project(path):
     project = compose_get_project(path, config_path)
     return project
 
+def ps_(project):
+    """
+    containers status
+    """
+    #logging.debug('ps ' + project.name)
+    containers = project.containers(stopped=True)
+    items = [{
+        'name': container.name,
+        'name_without_project': container.name_without_project,
+        'command': container.human_readable_command,
+        'state': container.human_readable_state,
+        'labels': container.labels,
+        'ports': container.ports,
+        #'volumes': get_volumes(get_container_from_id(project.client, container.id)),
+        'is_running': container.is_running} for container in containers]
 
+    return items
 
 def find_yml_files(path):
     """
