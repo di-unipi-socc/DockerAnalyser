@@ -1,17 +1,17 @@
 from dockeranalyser.core.utils import pull_code
 from dockeranalyser.core.mycompose import get_project, find_yml_files, ps_
 from dockeranalyser.core.monitor import count_queue_msg, count_analysed_images, get_images
-#from .constant import *
-#import configparser
+# from .constant import *
+# import configparser
 import os
 import click
 from . import constant
 import json
+import shutil
 
-
-#import docker
-#from git import Repo
-#client = docker.from_env()
+# import docker
+# from git import Repo
+# client = docker.from_env()
 
 APP_NAME = "dockeranalyser"
 
@@ -29,21 +29,48 @@ APP_NAME = "dockeranalyser"
 
 @click.group()
 def cli():
-    #print("dir analyser: " + constant.ANALYSER_CODE_DIR)
+    # print("dir analyser: " + constant.ANALYSER_CODE_DIR)
     pass
 
+
 @click.command()
-@click.option('-lp','--lambda-package', default="deploy-package", help='Path to the folder that contains the lambda code and any dependencies.')
+@click.option('-lp', '--lambda-package', default="deploy-package", help='Path to the folder that contains the lambda code and any dependencies.')
 @click.option('--percentage', default=100, help="Number of images to be dowloaded form the Docker registry.")
 def up(lambda_package, percentage):
-    #click.echo('UP!')
-    workdir =  constant.ANALYSER_CODE_DIR
+    # click.echo('UP!')
+    workdir = constant.ANALYSER_CODE_DIR
+
     if os.path.isdir(workdir):
-        project = get_project(workdir) # get the yml file from the project folder
+        #click.echo("Importing the lambda package {0} into the project: {1}.".format(lambda_package, workdir))
+                # if the folder target for copying the path deploy already
+                # exist
+        path_deploy = constant.ANALYSER_PATH_DEPLOY
+        if os.path.isdir(path_deploy):
+            click.echo(click.style("Lambda package {0} already exist.".format(lambda_package), fg='red'))
+            if click.confirm('Do you want import the lambda package directory:{}'.format(lambda_package)):
+                shutil.rmtree(path_deploy, ignore_errors=False)
+                shutil.copytree(lambda_package, path_deploy)
+                click.echo(click.style("Deploy package imported in: {0}".format(path_deploy), fg='green'))
+        else:
+            click.echo(click.style("path to deploy does not exist: {0}. ".format(path_deploy)))
+            return
+
+    else:
+        click.echo(click.style("Server Code folder does not exist: {0}  ".format(workdir)))
+        return
+
+
+    if os.path.isdir(workdir):
+        # get the yml file from the project folder
+        project = get_project(workdir)
         project.up(do_build=False)
         click.echo(click.style("Docker compose up", fg='green'))
     else:
-        click.echo(click.style("Path to project not found. $ dockeranalyser init ", fg='red'))
+        click.echo(click.style(
+            "Path to project not found. $ dockeranalyser init ", fg='red'))
+
+
+
 #
 # @click.command()
 # @click.option('-d','--debug', default=False, help='Path to the folder that contains the lambda code and any dependencies.')
@@ -103,7 +130,7 @@ def build():
 
 
     #
-    #return jsonify(
+    # return jsonify(
     #    {
     #        'command': 'up',
     #        'containers': [container.name for container in container_list]
@@ -126,7 +153,7 @@ def ps():
         #   'is_running': conta
         # }
 
-        #print(containers)
+        # print(containers)
         click.echo("NAME \t\t SERVICE \t\t STATE \n"+"--"*30 + "\n"+"\n".join( "{0} \t {1} \t {2}".format(c['name'],c['labels']['com.docker.compose.service'], c['state']) for c in containers))
 
     else:
@@ -135,12 +162,12 @@ def ps():
 
 @click.command()
 def stop():
-    #click.echo('Stopping container...')
+    # click.echo('Stopping container...')
     workdir =  constant.ANALYSER_CODE_DIR
     if os.path.isdir(workdir):
         project = get_project(workdir) # get the yml file from the project folder
         project.stop(
-            #service_names = None
+            # service_names = None
             )
         click.echo(click.style("Stopped all the containers", fg='green'))
     else:
@@ -172,7 +199,7 @@ def config():
 
 
 
-#cli.add_command(init)
+# cli.add_command(init)
 cli.add_command(up)
 cli.add_command(build)
 cli.add_command(ps)
