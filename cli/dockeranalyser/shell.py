@@ -67,7 +67,7 @@ def up(lambda_package, percentage):
         click.echo(click.style("Docker compose up", fg='green'))
     else:
         click.echo(click.style(
-            "Path to project not found. $ dockeranalyser init ", fg='red'))
+            "Path to project not found. $ dockera-analyser up ", fg='red'))
 
 
 

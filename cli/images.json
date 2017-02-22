@@ -1,0 +1,1 @@
+{"count": 1, "images": [{"is_automated": false, "name": "xyscape1/dse_solr:latest", "__v": 0, "_id": "588c61c5fc58a000118dde28", "is_private": false, "softwares": [{"ver": "2.7.6", "software": "python"}, {"ver": "1.8.0", "software": "java"}, {"ver": "5.18.2", "software": "perl"}, {"ver": "7.35.0", "software": "curl"}, {"ver": "1.15", "software": "wget"}]}]}

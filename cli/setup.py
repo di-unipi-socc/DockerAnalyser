@@ -20,7 +20,7 @@ class install(_install):
     def run(self):
         _install.run(self)
         self.pull_code()
-        print_("Server Root dir {0}".format(ANALYSER_CODE_DIR))
+        print_("Analyser Root directory: {0}".format(ANALYSER_CODE_DIR))
 
     def pull_code(self):
         print_("pulling the code")
@@ -32,13 +32,13 @@ class install(_install):
             #Repo.clone_from(GIT_REPO_URL, ANALYSER_CODE_DIR , branch="dfcustom", depth=1)
             #print_("Dowloaded completed")
         #else:
-        print_("Dowloading the Server code in: {0}...".format(ANALYSER_CODE_DIR))
-        Repo.clone_from(GIT_REPO_URL, ANALYSER_CODE_DIR , branch="dfcustom", depth=1)
+        print_("Dowloading the Analyser server code in: {0}...".format(ANALYSER_CODE_DIR))
+        Repo.clone_from(GIT_REPO_URL, ANALYSER_CODE_DIR , branch=GIT_REPO_BRANCH, depth=1)
         print_("Dowloaded completed")
 
 setup(
     name='DockerAnalyser',
-    version='0.2',
+    version='0.2.1',
     description='Analyse Docker images.',
     cmdclass={'install': install},
     #long_description=long_description,
