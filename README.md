@@ -1,12 +1,22 @@
 
 
-#  DockerFinder: Multi-attribute search of Docker images
+#  DockerLambdaAnalyser
 
 Department of Computer Science, University of Pisa.
 
 Davide Neri,  davide.neri@di.unipi.it
 
-## Why DockerFinder ?
+
+## How to use
+
+Install dockeranalyser with pip:
+
+```
+pip install dockeranalyser
+```
+
+
+<!-- ## Why DockerFinder ?
 
 Docker only permits looking for images by specifying a term ,
 which is then exploited to return all images where such term occurs
@@ -29,10 +39,12 @@ isuper/java-oracle     This repository contains all java releases...   48       
 ```
 
 As a consequence, users cannot specify more complex queries, e.g., by imposing requirements on the
-software distributions an image must support
+software distributions an image must support -->
 
-## What is DockerFinder ?
+## What is DockerLambdaAnalyser ?
 
+
+## Example of Lambda package
 ```
 DockerFinder is a microservice-based prototype that permits searching for images
 based on multiple attributes.
@@ -43,8 +55,8 @@ The attributes for which is possible to search an image are:
   2. **Size**.
   3. **Stars**.
   4. **Pulls**.
-  
-  
+
+
 ## GUI of Docker Finder
 
 The GUI of DockerFinder is running on [**http://black.di.unipi.it/dockerfinder**](http://black.di.unipi.it/dockerfinder)
@@ -58,7 +70,7 @@ An example of a multi-attribute query submitted to DockerFinder is shown in the 
 <img src="./docs/df_gif.gif" width="500">
 </div>
 
-
+<!--
 ## Docker Finder main steps
 
 1. DockerFinder crawls images from a remote Docker registry,
@@ -68,12 +80,12 @@ An example of a multi-attribute query submitted to DockerFinder is shown in the 
 
 <div align="center">
 <img src="./docs/df_discovery.png" width="500">
-</div>
+</div> -->
 
 
 
 
-## The microservice-based architecture DockerFinder
+## The microservice-based architecture DockerAlmbdaAnalyser
 
 The figure below details the microservice-based architecture of Docker Finder. The microservice (represented as rectangles) are divided in the three three main functionalities carried out by Docker Finder:
   1. **[Analysis](https://github.com/di-unipi-socc/DockerFinder/tree/master/analysis)**: the analysis of each image consists in retrieving all the metadata already available in the registry, and in running a container to au-
@@ -86,7 +98,7 @@ images by  submit multi-attribute queries thorugh a GUI or RESTful APIs (*Search
 <div align="center">
 <img src="./docs/architecture.png" width="500">
 </div>
-
+<!--
 ## DockerFinder deployments
 The microservice-based architecture of Docker Finder is
 deployed as a multi-container Docker application (figure)  Each service is shippend within a Docker image (represented as boxes) and the protocol communications are represented as dashed lines (e.g. HTTP, AMQP, mongodb).
@@ -135,4 +147,4 @@ The `start_all.sh` script:
 - *create* the services by downloading the images from [Docker Hub-diunipisocc](https://hub.docker.com/r/diunipisocc/docker-finder/tags/)
 - *run* the services:
     - **Crawler**, **RabbiMQ**, **images_server**, **images_db**,**software_server**,**software_db**  ,**monitor**: run in the same host with a constraint  label.
-    - **scanner** can run in a any host that are partecipating in the swarm.
+    - **scanner** can run in a any host that are partecipating in the swarm. -->
