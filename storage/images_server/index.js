@@ -150,10 +150,12 @@ app.get('/', function (req, res) {
     res.json({message: 'use /api/images'});
 });
 
-
 //app.use('/search', require('./routes/search'))
 app.use('/search', require('./routes/search-paginated'))
 app.use('/api', require('./routes/api'));
+
+// api schema less
+app.use('/images', require('./routes/api-noschema'));
 
 // development error handler
 // will print stacktrace

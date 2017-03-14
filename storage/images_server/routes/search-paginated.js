@@ -123,7 +123,7 @@ router.get('/', function (req, res, next) {
       // }
 
     var options = {
-         select: (req.query.select)?req.query.select: '',
+        select: (req.query.select)?req.query.select: '',
         sort: sort,
         //populate: 'author',
         //lean: true,

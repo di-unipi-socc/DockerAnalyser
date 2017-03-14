@@ -3,7 +3,6 @@ var restful = require('node-restful')
 var mongoose = restful.mongoose;
 var mongoosePaginate = require('mongoose-paginate');
 
-
 var imageSchema =  new mongoose.Schema({
 
     // Information  only of the Taggged Images
