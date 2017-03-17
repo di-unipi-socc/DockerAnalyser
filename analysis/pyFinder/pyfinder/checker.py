@@ -92,6 +92,7 @@ class Checker:
         pending = 0
         uptodate = 0
 
+        # TODO: get_images() must an an iterator of images (with the pagination added)
         json_res = self.client_images.get_images()
         tot_dockerfinder_images = json_res ['count']
         self.logger.info(str(tot_dockerfinder_images) + " images present into local database")

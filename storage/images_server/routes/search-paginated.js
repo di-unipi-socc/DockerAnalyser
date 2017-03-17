@@ -29,7 +29,7 @@ router.get('/', function (req, res, next) {
             //elementMatch = {$elemMatch: {bin: key, ver: {$regex: '^' + req.query[key]}}};
             findMatch.softwares.$all.push({$elemMatch: {software: key, ver: {$regex: '^' + req.query[key]}}});
             numberBins +=1;
-            console.log("deleting kdkd: "+ req.query[key])
+            console.log("deleting : " + key +" "+ req.query[key])
             delete req.query.key;
         }
     }
