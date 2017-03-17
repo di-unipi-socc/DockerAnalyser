@@ -22,43 +22,10 @@ Storage
 # RESTful API of the images service
 The API is exposed to the port `3000` on the endpoint `/api/images`
 
-An image description is described by the *Mongoose Schema*:
+Images in the storage are schema-less structures.  Every image can be described with any **key:value** filed.
+
 ```
-{
-  name: { // <repo:tag> the name id composed by: repository name : tag
-      type:       String,
-      unique:     true,
-      required    :[true, 'The name of the image cannot be empty']
-      },
-  id_tag: Number,
-  last_scan:      Date,
-  last_updated:   Date,  // time of the last updated of the repo in the docker hub
-  size:      Number,
-  repository: Number,
-  creator: Number,
-
-  //Docker repository informations
-  user:String,
-  stars:     {
-        type:       Number,
-        min:        [0, 'stars must be positive number']
-        },
-  pulls:     Number,
-  description:    String,
-  is_automated: Boolean,
-  is_private: Boolean,
-
-    //Docker Finder informations
-  distro: String,
-  softwares: [{
-          _id: false,
-          software: String,
-          ver: String
-      }],
-
-      status: String, // "pending" | "updated": if pending the image description must be updated.
-
-      inspect_info:  mongoose.Schema.Types.Mixed  // docker run inpect <name>
+var imageSchema =  new mongoose.Schema({ },{"strict":false});
 ```
 
 ### Retrieving images
@@ -68,35 +35,20 @@ The GET operation returns all the images stored into the local repository of Doc
 GET /api/images
 ```
 
-It returns a JSON, where *X*  is the number of total images returned, and *images* is an array of JSON object describiing the images.
+It returns a JSON, where   is the number of total images returned, and *images* is an array of JSON object describiing the images.
 
 ```
-{"count":<X>,
- "images":
-    [
-      {"_id":"58467ada8d8c26001116f167",
-        "name":"onepill/docker-openresty:latest",
-        "repository":1084992,
-        "description":"OpenResty version of https://hub.docker.com/r/kyma/docker-nginx/",
-        "status":"updated",
-        "last_scan":"2016-12-06T08:46:18.414Z",
-        "last_updated":"2016-12-01T16:15:08.892Z",
-        "is_automated":null,
-        "pulls":7,
-        "creator":296143,
-        "stars":0,
-        "user":null,
-        "distro":null,
-        "id_tag":6517443,
-        "is_private":null,
-        "size":18645091,
-        "softwares":[
-              {"ver":"1.24.2","software":"httpd"},
-              {"ver":"1.24.2","software":"wget"}
-              ]
-        "inspect_info":{ < contains all the information returned by docker inspect command >}
-      },
-    ...// the other images obejects
+{
+  "count": NUMBER,
+  "page": NUMBER,
+  "limit": NUMBER,
+  "pages": NUMBER,
+  "images":  [{
+             <Image 1>
+           },{
+              ...
+             <Image n>,
+      }
     ]
 }
 ```
@@ -137,26 +89,11 @@ to add. An example of a request it is shown below.
 POST / api / images
 {
     "name":"onepill/docker-openresty:latest",
-    "repository":1084992,
     "description":"OpenResty version of https://hub.docker.com/r/kyma/docker-nginx/",
-    "status":"updated",
-    "last_scan":"2016-12-06T08:46:18.414Z",
-    "last_updated":"2016-12-01T16:15:08.892Z",
-    "is_automated":null,
-    "pulls":7,
-    "creator":296143,
-    "stars":0,
-    "user":null,
-    "distro":null,
-    "id_tag":6517443,
-    "is_private":null,
-    "size":18645091,
     "softwares":[
         {"ver":"1.24.2","software":"httpd"},
         {"ver":"1.24.2","software":"wget"}
         ]
-     "inspect_info":{ < contains all the information returned by docker inspect command >}
-
 }
 ```
 ### Updating images
