@@ -124,7 +124,7 @@ router.get('/', function (req, res, next) {
 
     var options = {
         select: (req.query.select)?req.query.select: '',
-        sort: sort,
+        //sort: req.query.sort ??,
         //populate: 'author',
         //lean: true,
         page: (req.query.page)?Number(req.query.page): 1,
@@ -141,7 +141,7 @@ router.get('/', function (req, res, next) {
       // result.limit
       // result.page
       // result.pages
-      //  "limit":result.limit,
+      // "limit":result.limit,
 
       res.json({"count": result.total,
                 "page":result.page,
