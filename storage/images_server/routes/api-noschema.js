@@ -8,14 +8,15 @@ var Image = require('../models/image-noschema');
 String.prototype.inList = function (list) {
     return ( list.indexOf(this.toString()) != -1)
 };
+
 // record all the methods
 Image.methods(['get','put','post','delete']).updateOptions({ new: true });
 
+// reserved key parameters of the API query
 var _reservedkey=['limit', 'page', 'sort', 'select']
 
 Image.before('get', function (req, res, next) {
-
-    console.log("GET " + req.originalUrl);
+    console.log("GET: " + req.originalUrl);
 
     // query for retrieve the images with binary name and versions
     var findMatch = {};
@@ -44,7 +45,12 @@ Image.before('get', function (req, res, next) {
     //     });
 
 
-     //next()
+  // if images/:id call the next method for retrieving the single iamge by id
+   if (req.params.id){
+     next()
+     return
+   }
+
    // pagination
      var options = {
          select: (req.query.select)?req.query.select: '',
@@ -60,8 +66,7 @@ Image.before('get', function (req, res, next) {
                console.log(err);
                return next(err);
       }
-
-       res.json( {
+      res.json( {
                  "count": result.total,
                  "page":result.page,
                  "limit":result.limit,
@@ -72,8 +77,7 @@ Image.before('get', function (req, res, next) {
      });
 });
 
-
-Image.register(router,'/');
+Image.register(router,'/images');
 
 // Return router
 module.exports = router;

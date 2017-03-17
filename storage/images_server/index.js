@@ -152,10 +152,12 @@ app.get('/', function (req, res) {
 
 //app.use('/search', require('./routes/search'))
 app.use('/search', require('./routes/search-paginated'))
-app.use('/api', require('./routes/api'));
+
+// /api/images route with fixed json schema
+//app.use('/api', require('./routes/api'));
 
 // api schema less
-app.use('/images', require('./routes/api-noschema'));
+app.use('/api', require('./routes/api-noschema'));
 
 // development error handler
 // will print stacktrace
