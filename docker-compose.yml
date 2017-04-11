@@ -38,6 +38,7 @@ services:
     restart: on-failure:3
     ports:
       - 8082:15672
+      - 5672:5672
     volumes:
       - /var/lib/rabbitmq
     deploy:
@@ -53,8 +54,7 @@ services:
     command: [run, '--images-url=http://images_server:3000/api/images/',
                   '--queue=images',
                   '--key=images.scan',
-                  '--software-url=http://software_server:3001/api/software',
-                  '--rmi']
+                  ]
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
 
@@ -88,42 +88,42 @@ services:
 # ###############   DISCOVERY PHASE ####################
 # #####################################################
 #
-  software_server:
-    build: discovery/softwareService/software_server
-    image: diunipisocc/docker-finder:software_server
-    hostname: software_server
-    ports:
-      - "3001:3001"
-    depends_on:
-      - software_db
-    deploy:
-      placement:
-        constraints:
-          - node.hostname==swarm-manager
-
-  software_db:
-    image: mongo:3
-    hostname: software_db
-    volumes:
-      - /data/db  # /data/db is the deafult directory where mogno stores the databases.
-    deploy:
-       placement:
-          constraints:
-             - node.hostname == swarm-manager
-
-  webapp:
-     build: discovery/webapp/
-     image: diunipisocc/docker-finder:webapp
-     restart: on-failure:3
-     ports:
-       - 80:80
-     volumes:
-       - /home/dido/github/DockerFinder/discovery/webapp:/code
-     deploy:
-        placement:
-            constraints:
-              - node.hostname == swarm-manager
-
+  # software_server:
+  #   build: discovery/softwareService/software_server
+  #   image: diunipisocc/docker-finder:software_server
+  #   hostname: software_server
+  #   ports:
+  #     - "3001:3001"
+  #   depends_on:
+  #     - software_db
+  #   deploy:
+  #     placement:
+  #       constraints:
+  #         - node.hostname==swarm-manager
+  #
+  # software_db:
+  #   image: mongo:3
+  #   hostname: software_db
+  #   volumes:
+  #     - /data/db  # /data/db is the deafult directory where mogno stores the databases.
+  #   deploy:
+  #      placement:
+  #         constraints:
+  #            - node.hostname == swarm-manager
+  #
+  # webapp:
+  #    build: discovery/webapp/
+  #    image: diunipisocc/docker-finder:webapp
+  #    restart: on-failure:3
+  #    ports:
+  #      - 80:80
+  #    volumes:
+  #      - /home/dido/github/DockerFinder/discovery/webapp:/code
+  #    deploy:
+  #       placement:
+  #           constraints:
+  #             - node.hostname == swarm-manager
+  #
 
   # #####################################################
   # ###############   STORAGE PHASE ####################
@@ -164,7 +164,28 @@ services:
 #    #container_name: monitor
 #    build: management
 #    ports:
-#      - "3002:3002"
+# #      - "3002:3002"
+#   build:
+#     context: analysis
+#     dockerfile: ./Dockerfile_crawler
+#
+#      orchestrator:
+#        build:
+#          context: management
+#          dockerfile: Dockerfile_orchestrator
+  # orchestrator:
+  #   build:
+  #     context: management
+  #     dockerfile: ./Dockerfile_orchestrator
+  #   ports:
+  #     - "3003:3003"
+  #   volumes:
+  #     - /var/run/docker.sock:/var/run/docker.sock
+  #     - /pro
+  #   working_dir: /project
+  #   environment:
+  #     - GIT_REPO="prova"
+  #
 
 
 # volumes:

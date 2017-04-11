@@ -1,6 +1,6 @@
 
 
-#  DockerFinder: Multi-attribute search of Docker images
+#  DockerLambdaAnalyser
 
 [![Join the chat at https://gitter.im/di-unipi-socc/DockerFinder](https://badges.gitter.im/di-unipi-socc/DockerFinder.svg)](https://gitter.im/di-unipi-socc/DockerFinder?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 [![License](http://img.shields.io/badge/license-APACHE-green.svg?style=flat)](https://raw.githubusercontent.com/di-unipi-socc/DockerFinder/master/LICENSE)
@@ -13,7 +13,17 @@ Contact: davide.neri@di.unipi.it
 
 Try it: [Docker Finder](http://black.di.unipi.it/dockerfinder)
 
-## Why DockerFinder ?
+
+## How to use
+
+Install dockeranalyser with pip:
+
+```
+pip install dockeranalyser
+```
+
+
+<!-- ## Why DockerFinder ?
 
 Docker only permits looking for images by specifying a term ,
 which is then exploited to return all images where such term occurs
@@ -36,10 +46,12 @@ isuper/java-oracle     This repository contains all java releases...   48       
 ```
 
 As a consequence, users cannot specify more complex queries, e.g., by imposing requirements on the
-software distributions an image must support
+software distributions an image must support -->
 
-## What is DockerFinder ?
+## What is DockerLambdaAnalyser ?
 
+
+## Example of Lambda package
 ```
 DockerFinder is a microservice-based prototype that permits searching for images
 based on multiple attributes.
@@ -65,7 +77,7 @@ An example of a multi-attribute query submitted to DockerFinder is shown in the 
 <img src="./docs/df2.gif" width="700">
 </div>
 
-
+<!--
 ## Docker Finder main steps
 
 1. DockerFinder crawls images from a remote Docker registry,
@@ -75,10 +87,12 @@ An example of a multi-attribute query submitted to DockerFinder is shown in the 
 
 <div align="center">
 <img src="./docs/df_discovery.png" width="500">
-</div>
+</div> -->
 
 
-## The microservice-based architecture DockerFinder
+
+
+## The microservice-based architecture DockerAlmbdaAnalyser
 
 The figure below details the microservice-based architecture of Docker Finder. The microservice (represented as rectangles) are divided in the three three main functionalities carried out by Docker Finder:
   1. **[Analysis](https://github.com/di-unipi-socc/DockerFinder/tree/master/analysis)**: the analysis of each image consists in retrieving all the metadata already available in the registry, and in running a container to au-
@@ -102,6 +116,12 @@ In order to deploy Docker Finder (locally) the requirements are the following:
  - [**Docker Compose >= 1.9.0 **](https://docs.docker.com/compose/install/)
 
 Each service is shippend within a Docker image (represented as boxes) and the protocol communications are represented as dashed lines (e.g. HTTP, AMQP, mongodb).
+
+<!--
+## DockerFinder deployments
+The microservice-based architecture of Docker Finder is
+deployed as a multi-container Docker application (figure)  Each service is shippend within a Docker image (represented as boxes) and the protocol communications are represented as dashed lines (e.g. HTTP, AMQP, mongodb).
+>>>>>>> master
 
 <div align="center">
 <img src="./docs/architecture_docker.png" width="500">

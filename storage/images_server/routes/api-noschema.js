@@ -24,10 +24,12 @@ Image.before('get', function (req, res, next) {
     for (var key in req.query) {
        if (!key.inList(_reservedkey)){
           // check if is a number or a string
-          var value = parseInt(req.query[key]);
-          if (isNaN(value)) value = req.query[key];
-          findMatch[key] = {$eq: value}
-          //console.log(findMatch)
+          console.log(key + " " + req.query[key])
+          //var value = parseInt(req.query[key]);
+          //if (isNaN(value)) value = req.query[key];
+          //findMatch[key] = {$eq: value}
+          findMatch[key] = { $eq: req.query[key] }
+          console.log(findMatch)
         }
       }
 

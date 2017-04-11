@@ -1,0 +1,17 @@
+FROM python:alpine
+
+MAINTAINER Davide Neri <davide.neri@di.unipi.it>
+
+RUN mkdir /code
+
+WORKDIR /code
+
+COPY  orchestrator/requirements.txt /code/
+RUN pip install  --upgrade pip
+RUN pip install -r requirements.txt
+
+COPY orchestrator/ /code
+
+ENTRYPOINT ["python","/code/app.py"]
+
+#CMD ["--help"]

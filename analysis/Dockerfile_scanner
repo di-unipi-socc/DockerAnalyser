@@ -6,16 +6,16 @@ RUN mkdir /code
 WORKDIR /code
 
 COPY  pyFinder/requirements.txt /code/
+
 RUN pip install  --upgrade pip
 RUN pip install -r requirements.txt
 
 # ADD . /code/
 
-# install pyfinder module in the container
-# ADD setup.py /code
-# RUN python setup.py install
-
 COPY pyFinder/ /code
+
+#deploy-packe is the folder given by an user with the  custom analysis function
+COPY deploy-package /code/pyfinder/deploy
 
 ENTRYPOINT ["python","/code/entryScanner.py"]
 CMD ["--help"]

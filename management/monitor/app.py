@@ -21,6 +21,11 @@ def index():
     return url
 
 
+@app.route("/build")
+def build():
+
+
+
 @app.route('/service/<servicename>/queue/<queuename>')
 def service(servicename, queuename):
     try:
@@ -35,10 +40,7 @@ def service(servicename, queuename):
         return jsonify(
                 err=True,
                 msg="Error in connecting"+servicename
-                )
-
-
-
+  )
 
 def count_queue_msg(service, queue):
 
