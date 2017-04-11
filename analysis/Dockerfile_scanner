@@ -17,5 +17,7 @@ COPY pyFinder/ /code
 #deploy-packe is the folder given by an user with the  custom analysis function
 COPY deploy-package /code/pyfinder/deploy
 
+RUN pip install -r /code/pyfinder/deploy/requirements.txt
+
 ENTRYPOINT ["python","/code/entryScanner.py"]
 CMD ["--help"]
