@@ -2,8 +2,6 @@
 
 #  DockerLambdaAnalyser
 
-[![Join the chat at https://gitter.im/di-unipi-socc/DockerFinder](https://badges.gitter.im/di-unipi-socc/DockerFinder.svg)](https://gitter.im/di-unipi-socc/DockerFinder?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
-[![License](http://img.shields.io/badge/license-APACHE-green.svg?style=flat)](https://raw.githubusercontent.com/di-unipi-socc/DockerFinder/master/LICENSE)
 
 [Department of Computer Science, University of Pisa](https://www.di.unipi.it/en/)
 
@@ -11,12 +9,9 @@ Author: Davide Neri.
 
 Contact: davide.neri@di.unipi.it
 
-Try it: [Docker Finder](http://black.di.unipi.it/dockerfinder)
-
-
 ## How to use
 
-Install dockeranalyser with pip:
+Install dockera-nalyser with pip:
 
 ```
 pip install dockeranalyser
@@ -51,7 +46,7 @@ software distributions an image must support -->
 ## What is DockerLambdaAnalyser ?
 
 
-## Example of Lambda package
+## Case study: Docker Finder
 ```
 DockerFinder is a microservice-based prototype that permits searching for images
 based on multiple attributes.
@@ -113,7 +108,7 @@ deployed as a multi-container Docker application (figure).
 In order to deploy Docker Finder (locally) the requirements are the following:
 
  - [**Docker engine >= 1.12**](https://docs.docker.com/engine/installation/)
- - [**Docker Compose >= 1.9.0 **](https://docs.docker.com/compose/install/)
+ - [**Docker Compose >= 1.9.0**](https://docs.docker.com/compose/install/)
 
 Each service is shippend within a Docker image (represented as boxes) and the protocol communications are represented as dashed lines (e.g. HTTP, AMQP, mongodb).
 
