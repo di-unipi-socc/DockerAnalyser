@@ -19,23 +19,34 @@ def on_message( image, context):
     client_images = context['images']
 
     repo = image["repo_name"]
+
     logger.info("Received image to be analysed: {} ".format(repo))
 
-    node_image = dict()
+    r = requests.get("http://images_server:3000/api/images?name={}".format(repo)) #http://127.0.0.1:3000/api/images?page=1&limit=100&name=sameersbn/gitlab
 
-    node_image['name'] = repo
+    if not r.ok:
+        node_image = dict()
+        node_image['name'] = repo
 
-    from_image = parse_dockerfile(get_dockerfile(repo))
-    from_repo, from_tag = from_image.split(":")
-    node_image['from_repo'] = from_repo
-    node_image['from_tag'] = from_tag
-    node_image["is_official"] = image["is_official"]
-    node_image["is_automated"] = image["is_automated"]
-    logger.info("Push {}".format(node_image))
+        from_image = parse_dockerfile(get_dockerfile(repo))
+        logger.info("From image extracted {} ".format(from_image))
+        if ":" in from_image:
+            from_repo, from_tag = from_image.split(":")
+        else:
+            from_repo = from_image
+            from_tag = None
+        node_image['from_repo'] = from_repo
+        node_image['from_tag'] = from_tag
+        node_image["is_official"] = image["is_official"]
+        node_image["is_automated"] = image["is_automated"]
+        logger.info("Push {}".format(node_image))
 
-    client_images.post_image(node_image)
+        client_images.post_image(node_image)
 
-    return True
+        return True
+    else:
+        logger.info("Repo name already present  {} ".format(repo))
+        return True
 
 # {"contents": "FROM python:2.7\n\n# FileAuthor /Maintaner\nMAINTAINER Davide
 # Neri\n\nENV PYTHONUNBUFFERED 1\nRUN mkdir /code\nWORKDIR /code\nADD requirements.txt <

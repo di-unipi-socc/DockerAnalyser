@@ -39,6 +39,4 @@ def on_message(json_image_tag, context):
 
 
 
-
-
     return True
