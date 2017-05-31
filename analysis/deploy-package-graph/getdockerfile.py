@@ -5,6 +5,30 @@ import sys
 import re
 
 
+def on_message(context, image):
+    # {"star_count": 1177, "pull_count": 20511731, "repo_owner": null,
+    # "short_description": "GitLab Community Edition docker image based on the Omnibus package",
+    # "is_automated": true, "is_official": false, "repo_name": "gitlab/gitlab-ce",
+    # "tag": "nightly", "name": "gitlab/gitlab-ce:nightly", "full_size": 412857400,
+    # "images": [{"size": 412857400, "architecture": "amd64", "variant": null,
+    # "features": null, "os": "linux", "os_version": null, "os_features": null}],
+    # "id": 4253706, "repository": 252439, "creator": 454693, "last_updater": 454693,
+    # "last_updated": "2017-05-31T02:06:25.100551Z", "image_id": null, "v2": true}
+
+    logger = context['logger']
+    client_images = context['images']
+
+    repo = image["repo_name"]
+    logger.info("Received image to be analysed: {} ".format(repo)
+
+    node_image = dict()
+
+    node_image['name'] = repo_name
+    from_image = parse_dockerfile(get_dockerfile(repo_name))
+    node_image['from_image'] = from_image
+
+    client_images.post_image(node_image)
+
 # {"contents": "FROM python:2.7\n\n# FileAuthor /Maintaner\nMAINTAINER Davide
 # Neri\n\nENV PYTHONUNBUFFERED 1\nRUN mkdir /code\nWORKDIR /code\nADD requirements.txt <
 # /code/\nRUN pip install -r requirements.txt\nADD . /code/\n"}
@@ -18,20 +42,10 @@ def parse_dockerfile(dockerfile):
     return re.search('FROM ([^\s]+)', dockerfile).group(1)
 
 
-if len(sys.argv) > 1:
-    image = sys.argv[1]
-
-    repo, tag = image.split(":")
-
-    r = requests.get("https://hub.docker.com/v2/repositories/{}/dockerfile"
-                     .format(repo))
-
-    print(r.json())
-
 github_url = "https://github.com/"
 
 
-def getOfficialsDockerfiles():
+def get_officials():
     page = requests.get(
         "https://github.com/docker-library/official-images/tree/master/library")
 
@@ -70,9 +84,9 @@ def getOfficialsDockerfiles():
             # githubrepo_tags = tree_github.xpath("//tr[td[contains(text(), 'Directory')]]/*/text()")
             dirs = [d.split(":")[1].strip()
                     for d in githubrepo_dirs]                         # i.strip()
-            d["Directory"] = dirs
+            node["Directory"] = dirs
 
-            for directory in d["Directory"]:
+            for directory in node["Directory"]:
                 # githubrepo   # https://github.com/TimWolla/docker-adminer.git' => TimWolla/docker-adminer
                 startString = 'https://github.com/'
                 endString = '.git'
@@ -95,7 +109,7 @@ def getOfficialsDockerfiles():
     # https://raw.githubusercontent.com/tianon/docker-bash/master/4.3/Dockerfile
 
 
-def getDockerfile(repo_name):
+def get_dockerfile(repo_name):
     docker_url = "https://hub.docker.com/v2/repositories/{}/dockerfile/"
     #  https://hub.docker.com/v2/repositories/dido/webofficina/dockerfile/
     #  https://hub.docker.com/v2/repositories/kaggle/python/dockerfile/
@@ -103,4 +117,5 @@ def getDockerfile(repo_name):
     dockerfile = response.json()['contents']
     return dockerfile
 
-print(getDockerfile("dido/webofficina"))
+#print(getDockerfile("dido/webofficina"))
+#get_officials()
