@@ -24,7 +24,7 @@ def on_message( image, context):
 
     r = requests.get("http://images_server:3000/api/images?name={}".format(repo)) #http://127.0.0.1:3000/api/images?page=1&limit=100&name=sameersbn/gitlab
 
-    if not r.ok:
+    if r.json()['count'] == 0:
         node_image = dict()
         node_image['name'] = repo
 
@@ -45,7 +45,7 @@ def on_message( image, context):
 
         return True
     else:
-        logger.info("Repo name already present  {} ".format(repo))
+        logger.info("{}  already present into local database ".format(repo))
         return True
 
 # {"contents": "FROM python:2.7\n\n# FileAuthor /Maintaner\nMAINTAINER Davide
