@@ -2,7 +2,6 @@ import requests
 from lxml import html
 import re
 
-
 def on_message(image, context):
     # {"star_count": 1177, "pull_count": 20511731, "repo_owner": null,
     # "short_description": "GitLab Comm",
@@ -12,27 +11,31 @@ def on_message(image, context):
     # "full_size": 412857400
 
     logger = context['logger']
-    # client_images = context['images']
+    client_images = context['images']
 
     repo = image["repo_name"]
     logger.info("Received image to be analysed: {} ".format(repo))
     if not is_stored_locally(repo):
         # image is not present into local database
-        logger.info("{} is not present into local database} ".format(repo))
+        logger.info("{} is not present into local database".format(repo))
         # image dictionary with the field to be sent to the images_server
         node_image = {'name': repo}
-        dockerfile = get_dockerfile(repo)
-        from_repo, from_tag = extract_FROM(dockerfile)
-        logger.info("{} FROM {} {}"
-                    .format(reo, from_repo,
-                            "" if from_tag is None else from_tag))
+        try:
+            dockerfile = get_dockerfile(repo)
+            from_repo, from_tag = extract_FROM(dockerfile)
+            logger.info("{} FROM {} {}"
+                        .format(repo, from_repo,
+                                "" if from_tag is None else from_tag))
 
-        node_image['from_repo'] = from_repo
-        node_image['from_tag'] = from_tag
-        node_image["is_official"] = image["is_official"]
-        node_image["is_automated"] = image["is_automated"]
-        logger.info("POST {} ".format(node_image))
-        client_images.post_image(node_image)
+            node_image['from_repo'] = from_repo
+            node_image['from_tag'] = from_tag
+            node_image["is_official"] = image["is_official"]
+            node_image["is_automated"] = image["is_automated"]
+            logger.info("POST {} ".format(node_image))
+            client_images.post_image(node_image)
+        except ValueError as e:
+            logger.error(str(e))
+            return False
         return True
     else:
         logger.info("{}  already present into local database ".format(repo))
@@ -49,31 +52,44 @@ def is_stored_locally(repo_name):
     """
     try:
         response = requests.get("http://images_server:3000/api/images?name={}"
-                                .format(repo))
-        return True if response.json()['count'] == 0 else False
+                                .format(repo_name))
+        return False if response.json()['count'] == 0 else True
     except ConnectionError as e:
-        logger.error(str(e))
+        #logger.error(str(e))
         raise
 
 
 def extract_FROM(dockerfile):
-    from_image = re.search('FROM ([^\s]+)', dockerfile).group(1)
-    if ":" in from_image:  # FROM  reponame:tag
-        from_repo, from_tag = from_image.split(":")
-    else:                  # FROM reponame
-        from_repo = from_image
-        from_tag = None
-    return from_repo, from_tag
+    search = re.search('FROM ([^\s]+)', dockerfile)
+    if search:
+        from_image = search.group(1)
+        if ":" in from_image:  # FROM  reponame:tag
+            from_repo, from_tag = from_image.split(":")
+        else:                  # FROM reponame
+            from_repo = from_image
+            from_tag = None
+        return from_repo, from_tag
+    else:
+        raise ValueError("FROM value not found in DockerFile")
+
 
 
 def get_dockerfile(repo_name):
     #  https://hub.docker.com/v2/repositories/dido/webofficina/dockerfile/
     #  https://hub.docker.com/v2/repositories/kaggle/python/dockerfile/
+
     docker_url = "https://hub.docker.com/v2/repositories/{}/dockerfile/"
-    logger.info(docker_url.format(repo_name))
-    response = requests.get(docker_url.format(repo_name))
-    dockerfile = response.json()['contents']
-    return dockerfile
+    #logger.info(docker_url.format(repo_name))
+    try:
+        response = requests.get(docker_url.format(repo_name))
+        dockerfile = response.json()['contents']
+        return dockerfile
+    except ConnectionError as e:
+        #Slogger.error(str(e))
+        raise
+
+
+
 
 
 def get_officials_FROM():

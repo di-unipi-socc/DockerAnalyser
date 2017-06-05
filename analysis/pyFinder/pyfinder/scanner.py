@@ -28,14 +28,15 @@ class Scanner:
                                        queue=queue, route_key=route_key,
                                        on_msg_callback=self.on_message_ctx)
 
-        # client of Images Service:  in order to add and update the image description.
+        # client of Images Service: GET;POST; PUT images
         self.client_images = ClientImages(images_url=images_url)
 
         # client of Docker Hub.
         self.client_hub = ClientHub(docker_hub_endpoint=hub_url)
 
     def run(self):
-        """Start the scanner running the consumer client of the RabbitMQ server."""
+        """Start the scanner running the consumer client of the RabbitMQ server.
+        """
 
         try:
             self.consumer.run()
@@ -47,5 +48,5 @@ class Scanner:
                     'hub': self.client_hub,
                     'images': self.client_images}
 
-        self.logger.info( "Received message from RabbitMQ. Calling on_message() of the lambda function")
+        self.logger.info("Received message from RabbitMQ. Calling on_message() of the lambda function")
         return on_message(json_message, self.ctx)
