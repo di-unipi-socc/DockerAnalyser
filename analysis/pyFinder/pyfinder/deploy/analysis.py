@@ -1,14 +1,14 @@
 import docker
 
 # client of Docker daemon running on the local host
-self.client_daemon = docker.DockerClient(base_url='unix://var/run/docker.sock')
+client_daemon = docker.DockerClient(base_url='unix://var/run/docker.sock')
 
-def on_message(json_image_tag, context):
+def on_message(json_image, context):
     logger = context['logger']
     #docker_hub = context['hub']
     #client_images = context['images']
 
-    logger.info("Received image to be analysed: {} ".format(json_image_tag))
+    logger.info("{} image received ".format(json_image['name']))
 
 
     # {'star_count': 107,
@@ -27,16 +27,5 @@ def on_message(json_image_tag, context):
     #  'last_updated': '2016-03-22T06:46:03.447956Z',
     #  'image_id': None, 'v2': True}
     #  }
-
-    # image object of python docker SDK
-    image_json = {}
-    image = self.client_daemon.images.pull(json_image_tag["repo_name"])
-    logger.info("{}: downloaded image ".format(image.name))
-
-    image_json['id'] = image.id
-    image_json['short_id'] = image.short_id                # The ID of the image truncated to 10 characters, plus the sha256: prefix. 'sha256:2a5dd3169d'
-    image_json['layers'] = image.attrs['RootFS']['Layers'] # array of SHA 'sha256:05b940eef08d146119d8273e7a24056c5879991164fff0583e5f926cf86d3779'
-
-
 
     return True
