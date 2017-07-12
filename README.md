@@ -2,117 +2,74 @@
 
 #  DockerLambdaAnalyser
 
-
 [Department of Computer Science, University of Pisa](https://www.di.unipi.it/en/)
 
 Author: Davide Neri.
 
 Contact: davide.neri@di.unipi.it
 
-## How to use
-
-Install dockera-nalyser with pip:
-
-```
-pip install dockeranalyser
-```
-
-
-- https://microbadger.com/labels
-
-<!-- ## Why DockerFinder ?
-
-Docker only permits looking for images by specifying a term ,
-which is then exploited to return all images where such term occurs
-in the name, in the description or in the name of the user
-that built the image.
-
-For example, if we submit the query with the term *java*
-
-```
-$ docker search java
-```
-the result is:
-```
-NAME                   DESCRIPTION                                     STARS     OFFICIAL   AUTOMATED
-java                   Java is a concurrent, class-based, and obj...   1264      [OK]       
-anapsix/alpine-java    Oracle Java 8 (and 7) with GLIBC 2.23 over...   177                  [OK]
-develar/java                                                           52                   [OK]
-isuper/java-oracle     This repository contains all java releases...   48                   [OK]
-
-```
-
-As a consequence, users cannot specify more complex queries, e.g., by imposing requirements on the
-software distributions an image must support -->
-
 ## What is DockerLambdaAnalyser ?
 
-
-## Case study: Docker Finder
-```
-DockerFinder is a microservice-based prototype that permits searching for images
-based on multiple attributes.
-```
-
-The attributes for which is possible to search an image are:
-  1. **Software versions** supported (e.g. python 2.7 or java 1.8).
-  2. **Size**.
-  3. **Stars**.
-  4. **Pulls**.
-
-
-## GUI of Docker Finder
-
-The GUI of DockerFinder is running on [**http://black.di.unipi.it/dockerfinder**](http://black.di.unipi.it/dockerfinder)
-
-An example of a multi-attribute query submitted to DockerFinder is shown in the gif below.  It search the images that support:
-- *Java 1.8*,
-- *Python 2.7*,
-- *pulls >= 20*.
-
-<div  align="center">
-<img src="./docs/df2.gif" width="700">
-</div>
-
-<!--
-## Docker Finder main steps
-
-1. DockerFinder crawls images from a remote Docker registry,
-2. It automatically analyses such images to produce multi-attribute descriptions to be stored in a local repository,
-3. It permits searching for images by querying the local repository through a GUI or a RESTful API.
-
-
-<div align="center">
-<img src="./docs/df_discovery.png" width="500">
-</div> -->
+`DockerAnalyser` is a microservice-based architecture for customizable analysis of docker images.
 
 
 
-
-## The microservice-based architecture DockerAlmbdaAnalyser
+## The microservice-based architecture DockerAnalyser
 
 The figure below details the microservice-based architecture of Docker Finder. The microservice (represented as rectangles) are divided in the three three main functionalities carried out by Docker Finder:
   1. **[Analysis](https://github.com/di-unipi-socc/DockerFinder/tree/master/analysis)**: the analysis of each image consists in retrieving all the metadata already available in the registry, and in running a container to au-
 tomatically extract its runtime features (e.g., the software distributions it support).
   2. **[Storage](https://github.com/di-unipi-socc/DockerFinder/tree/master/storage)**:  DockerFinder stores all produced image
 descriptions in a local repository.
-  3. **[Discovery](https://github.com/di-unipi-socc/DockerFinder/tree/master/discovery)**: DokcerFinder allows users to search for
-images by  submit multi-attribute queries thorugh a GUI or RESTful APIs (*Search API*, *Software service API*).
 
 <div align="center">
 <img src="./docs/architecture.png" width="500">
 </div>
 
-# Getting started
-Docker Finder can be deployed as a multi-container Docker application. The microservice-based architecture of Docker Finder is
-deployed as a multi-container Docker application (figure).
+## Uses cases: DockerGraph and DockerFinder
 
-In order to deploy Docker Finder (locally) the requirements are the following:
+Starting from DockerAnalyser any tool analysis Docker imges can be creates.
+Two use cases are already available
+- `DockerGraph`: constructs a Knowledge base representing a directed graph of the dependencies among the repository name in Docker Hub.
+- `DockerFinder`: permits to search the images based on the software distribution that are supported (e.g., search the images that support `Python 2.7`)
+
+
+## Getting started
+DockerAnalyser is shipped in Docker Containers and can be deployed using `Docker Compose`
+
+The requirements are the following:
 
  - [**Docker engine >= 1.12**](https://docs.docker.com/engine/installation/)
  - [**Docker Compose >= 1.9.0**](https://docs.docker.com/compose/install/)
 
-Each service is shippend within a Docker image (represented as boxes) and the protocol communications are represented as dashed lines (e.g. HTTP, AMQP, mongodb).
+### Deploy DockerFinder
+The `deploy-package-dockerfinder` in the `analysis` folder contains the analysis function of
+'DockerFinder'.
+
+In ordet to build `scanner` microservice running the analysis function of `DockerFinder`:
+```
+$ docker-compose build --build-arg  deploy=deploy-package-dockerfinder scanner
+
+```
+Deploy all the microservices:
+```
+$ docker-compose up
+```
+
+### Deploy DockerGraph
+The `deploy-package-dockergraph` in the `analysis` folder contains the analysis function of
+`DockerGraph`.
+
+How to build the `scanner` microservice running the analysis function of `DockerGraph`:
+```
+$ docker-compose build --build-arg  deploy=deploy-package-dockergraph scanner
+
+```
+
+Deploy all the microservices:
+```
+$ docker-compose up
+```
 
 <!--
 ## DockerFinder deployments
