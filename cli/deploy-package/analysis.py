@@ -5,7 +5,7 @@ import os
 
 client_docker= docker.DockerClient(base_url="unix://var/run/docker.sock")
 
-def on_message(repo_name, context):
+def analysis(repo_name, context):
 
     logger = context['logger']
     docker_hub = context['hub']

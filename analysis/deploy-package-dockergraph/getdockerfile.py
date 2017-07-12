@@ -5,7 +5,7 @@ import sys
 import re
 
 
-def on_message(context, image):
+def analysis(context, image):
     # {"star_count": 1177, "pull_count": 20511731, "repo_owner": null,
     # "short_description": "GitLab Community Edition docker image based on the Omnibus package",
     # "is_automated": true, "is_official": false, "repo_name": "gitlab/gitlab-ce",

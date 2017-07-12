@@ -4,6 +4,7 @@ import pika
 import json
 import time
 
+
 class ConsumerRabbit(object):
     """This is an example consumer that will handle unexpected interactions
     with RabbitMQ such as channel and connection closures.
@@ -18,7 +19,7 @@ class ConsumerRabbit(object):
 
     """
 
-    def __init__(self, amqp_url, exchange=None, queue=None,  route_key=None, on_msg_callback=lambda x: x ):
+    def __init__(self, amqp_url, exchange=None, queue=None,  route_key=None, on_msg_callback=lambda x: x):
         """Create a new instance of the consumer class, passing in the AMQP
         URL used to connect to RabbitMQ.
 
@@ -89,7 +90,7 @@ class ConsumerRabbit(object):
             self._connection.ioloop.stop()
         else:
             self.logger.warning('Connection closed, reopening in 5 seconds: (%s) %s',
-                           reply_code, reply_text)
+                                reply_code, reply_text)
             self._connection.add_timeout(5, self.reconnect)
 
     def reconnect(self):
@@ -153,7 +154,7 @@ class ConsumerRabbit(object):
 
         """
         self.logger.warning('Channel %i was closed: (%s) %s',
-                       channel, reply_code, reply_text)
+                            channel, reply_code, reply_text)
         self._connection.close()
 
     def setup_exchange(self, exchange_name):
@@ -190,7 +191,8 @@ class ConsumerRabbit(object):
 
         """
         self.logger.debug('Declaring queue %s', queue_name)
-        self._channel.queue_declare(self.on_queue_declareok, queue_name, durable=True)
+        self._channel.queue_declare(
+            self.on_queue_declareok, queue_name, durable=True)
 
     def on_queue_declareok(self, method_frame):
         """Method invoked by pika when the Queue.Declare RPC call made in
@@ -202,7 +204,8 @@ class ConsumerRabbit(object):
         :param pika.frame.Method method_frame: The Queue.DeclareOk frame
 
         """
-        self.logger.info('Binding %s to %s with %s', self.exchange, self.queue, self.routing_key)
+        self.logger.info('Binding %s to %s with %s',
+                         self.exchange, self.queue, self.routing_key)
         self._channel.queue_bind(self.on_bindok, self.queue,
                                  self.exchange, self.routing_key)
 
@@ -249,7 +252,7 @@ class ConsumerRabbit(object):
 
         """
         self.logger.debug('Consumer was cancelled remotely, shutting down: %r',
-                    method_frame)
+                          method_frame)
         if self._channel:
             self._channel.close()
 
@@ -268,10 +271,10 @@ class ConsumerRabbit(object):
 
         """
         self.logger.debug('Received message # %s from %s: %s',
-                    basic_deliver.delivery_tag, properties.app_id, body)
+                          basic_deliver.delivery_tag, properties.app_id, body)
 
-
-        processed = self.on_message_callback(json.loads(body.decode()))  #.decode("utf-8")))
+        processed = self.on_message_callback(
+            json.loads(body.decode()))  # .decode("utf-8")))
 
         if not processed:
             self.purge_message(basic_deliver.delivery_tag)
@@ -313,7 +316,8 @@ class ConsumerRabbit(object):
         :param pika.frame.Method unused_frame: The Basic.CancelOk frame
 
         """
-        self.logger.debug('RabbitMQ acknowledged the cancellation of the consumer')
+        self.logger.debug(
+            'RabbitMQ acknowledged the cancellation of the consumer')
         self.close_channel()
 
     def close_channel(self):
@@ -339,7 +343,7 @@ class ConsumerRabbit(object):
             except:
                 interval = 10
                 time.sleep(interval)
-                self.logger.debug("Retry after" + str(10)+ " seconds")
+                self.logger.debug("Retry after" + str(10) + " seconds")
                 pass
         self._connection.ioloop.start()
 

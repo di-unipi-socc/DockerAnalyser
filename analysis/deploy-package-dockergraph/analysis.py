@@ -2,22 +2,17 @@ import requests
 from lxml import html
 import re
 
-def on_message(image, context):
-    # {"star_count": 1177, "pull_count": 20511731, "repo_owner": null,
-    # "short_description": "GitLab Comm",
-    # "is_automated": true, "is_official": false,
-    # "repo_name": "gitlab/gitlab-ce",
-    # "tag": "nightly", "name": "gitlab/gitlab-ce:nightly",
-    # "full_size": 412857400
+
+def analysis(image, context):
 
     logger = context['logger']
     client_images = context['images']
 
     repo = image["repo_name"]
     logger.info("Received image to be analysed: {} ".format(repo))
-    if not is_stored_locally(repo):
-        # image is not present into local database
+    if client_images.is_new(repo):
         logger.info("{} is not present into local database".format(repo))
+
         # image dictionary with the field to be sent to the images_server
         node_image = {'name': repo}
         try:
@@ -41,22 +36,21 @@ def on_message(image, context):
         logger.info("{}  already present into local database ".format(repo))
         return True
 
-
-def is_stored_locally(repo_name):
-    """
-    Return True if the *repo_name** is stored into *images_server*,
-    else return False.
-    Example:
-    repo name: *sameersbn/gitlab*:
-        GET http://127.0.0.1:3000/api/images?name=sameersbn/gitlab
-    """
-    try:
-        response = requests.get("http://images_server:3000/api/images?name={}"
-                                .format(repo_name))
-        return False if response.json()['count'] == 0 else True
-    except ConnectionError as e:
-        #logger.error(str(e))
-        raise
+# #
+# # def is_stored_locally(repo_name):
+# #     """
+# #     Return True if the *repo_name** is stored into *images_server*,
+# #     else return False.
+# #     Example:
+# #     repo name: *sameersbn/gitlab*:
+# #         GET http://127.0.0.1:3000/api/images?name=sameersbn/gitlab
+# #     """
+# #     try:
+# #         response = requests.get("http://images_server:3000/api/images?name={}"
+# #                                 .format(repo_name))
+# #         return False if response.json()['count'] == 0 else True
+# #     except ConnectionError as e:
+#         raise
 
 
 def extract_FROM(dockerfile):
@@ -73,23 +67,18 @@ def extract_FROM(dockerfile):
         raise ValueError("FROM value not found in DockerFile")
 
 
-
 def get_dockerfile(repo_name):
     #  https://hub.docker.com/v2/repositories/dido/webofficina/dockerfile/
     #  https://hub.docker.com/v2/repositories/kaggle/python/dockerfile/
 
     docker_url = "https://hub.docker.com/v2/repositories/{}/dockerfile/"
-    #logger.info(docker_url.format(repo_name))
+    # logger.info(docker_url.format(repo_name))
     try:
         response = requests.get(docker_url.format(repo_name))
         dockerfile = response.json()['contents']
         return dockerfile
     except ConnectionError as e:
-        #Slogger.error(str(e))
         raise
-
-
-
 
 
 def get_officials_FROM():
@@ -137,7 +126,9 @@ def get_officials_FROM():
             node["Directory"] = dirs
 
             for directory in node["Directory"]:
-                # githubrepo   # https://github.com/TimWolla/docker-adminer.git' => TimWolla/docker-adminer
+                # githubrepo   #
+                # https://github.com/TimWolla/docker-adminer.git' =>
+                # TimWolla/docker-adminer
                 startString = 'https://github.com/'
                 endString = '.git'
 

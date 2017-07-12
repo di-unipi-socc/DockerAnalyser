@@ -1,15 +1,13 @@
-import docker
 
-# client of Docker daemon running on the local host
-client_daemon = docker.DockerClient(base_url='unix://var/run/docker.sock')
+logger = logging.getLogger("fanalysis")
 
-def on_message(json_image, context):
-    logger = context['logger']
-    #docker_hub = context['hub']
-    #client_images = context['images']
+
+def analysis(json_image, context):
+
+    # logger = context['logger']
+    client_images_server = context['images']
 
     logger.info("{} image received ".format(json_image['name']))
-
 
     # {'star_count': 107,
     # 'pull_count': 1430790,

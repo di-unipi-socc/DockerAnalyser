@@ -47,5 +47,5 @@ class Scanner:
                     'hub': self.client_hub,
                     'images': self.client_images}
 
-        self.logger.info( "Received message from RabbitMQ. Calling on_message() of the lambda function")
-        return on_message(json_message['name'], self.ctx)
+        self.logger.info( "Received message from RabbitMQ. Calling analysis() of the lambda function")
+        return analysis(json_message['name'], self.ctx)

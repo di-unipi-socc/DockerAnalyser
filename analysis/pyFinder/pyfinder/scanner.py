@@ -1,10 +1,12 @@
-from pyfinder.core import ClientImages, ClientHub, ConsumerRabbit
-from pyfinder.deploy.analysis import on_message
+from pyfinder.core import ClientImages, ConsumerRabbit
+from pyfinder.deploy.analysis import analysis
 
 import logging
-import os
 
-"""This module contains the *Scanner* scheleton."""
+"""
+This module contains the *Scanner* microservice.
+"""
+
 
 class Scanner:
 
@@ -18,11 +20,7 @@ class Scanner:
         self.logger = logging.getLogger(__class__.__name__)
         self.logger.info(__class__.__name__ + " logger  initialized")
 
-
-        #self.client_daemon = docker.DockerClient(
-        #    base_url=os.environ.get('DOCKER_HOST') or socket)
-
-        # rabbit consumer of RabbittMQ: receives the images name to scan,
+        #  rabbit consumer of RabbittMQ: receives the images name to scan,
         #  on_message_callback is called when a message is received
         self.consumer = ConsumerRabbit(amqp_url=amqp_url, exchange=exchange,
                                        queue=queue, route_key=route_key,
@@ -30,9 +28,6 @@ class Scanner:
 
         # client of Images Service: GET;POST; PUT images
         self.client_images = ClientImages(images_url=images_url)
-
-        # client of Docker Hub.
-        self.client_hub = ClientHub(docker_hub_endpoint=hub_url)
 
     def run(self):
         """Start the scanner running the consumer client of the RabbitMQ server.
@@ -45,8 +40,8 @@ class Scanner:
 
     def on_message_ctx(self, json_message):
         self.ctx = {'logger': self.logger,
-                    'hub': self.client_hub,
                     'images': self.client_images}
 
-        self.logger.info("Received message from RabbitMQ. Calling on_message() of the lambda function")
-        return on_message(json_message, self.ctx)
+        self.logger.debug(
+            "Received message from RabbitMQ. Calling analysis() of the lambda function")
+        return analysis(json_message, self.ctx)

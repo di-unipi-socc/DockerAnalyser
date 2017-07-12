@@ -21,8 +21,8 @@ def upload_images(file_json, url="http://127.0.0.1:3001/api/images", ):
                     print(str(res.status_code) + " response: " + res.text)
             except requests.exceptions.ConnectionError as e:
                     self.logger.exception("ConnectionError: " + str(e))
-            except Exception  as e:
-                print (str(e))
+            except Exception as e:
+                print(str(e))
         print(str(tot_upload) + " images  uploaded")
 
 
@@ -32,18 +32,32 @@ def delete_all_images(url="http://127.0.0.1:3001/api/images"):
 
 
 def get_all_images(url="http://127.0.0.1:3000/api/images"):
+    page = 1                    # first page to be downloaed
+    limit = 100                 # number of images per page
+    payload = {'page': page, 'limit': limit}
+    images = {}
+    res = requests.get(url, params=payload)
+    # "count":87570,"page":1,"limit":200,"pages":438,"images":
+    if res.status_code == requests.codes.ok:
+        json_response = res.json()
+        print(" {} total images to be downloaded"
+              .format(json_response['count']))
+        images
+
+
     try:
         res = requests.get(url)
         if res.status_code == requests.codes.ok:
             json_response = res.json()
-            print(str(json_response['count']) + " total images downloaded")
-            #software_list = json_response['images']  # list of object
             return json_response
     except requests.exceptions.ConnectionError:
         raise
+def pull_images(path_file_json, url="http://127.0.0.1:3000/api/images"):
+    res = requests.get(url)
+    if res.status_code == requests.codes.ok:
+        json_response = res.json()
+        print(str(json_response['count']) + " total images to be downloaded")
 
-def pull_images( path_file_json, url="http://127.0.0.1:3000/api/images",):
-    list_json_images = get_all_images(url)
     with open(path_file_json, 'w') as f:
         json.dump(list_json_images, f, ensure_ascii=False)
         print(str(list_json_images['count']) + " Saved into "+ path_file_json)
