@@ -1,14 +1,13 @@
 
-logger = logging.getLogger("fanalysis")
-
 
 def analysis(json_image, context):
 
-    # logger = context['logger']
+    logger = context['logger']
     client_images_server = context['images']
 
     logger.info("{} image received ".format(json_image['name']))
 
+    # Json received from the rabbitMQ:
     # {'star_count': 107,
     # 'pull_count': 1430790,
     # 'repo_owner': None,

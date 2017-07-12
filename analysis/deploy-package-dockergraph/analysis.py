@@ -36,23 +36,6 @@ def analysis(image, context):
         logger.info("{}  already present into local database ".format(repo))
         return True
 
-# #
-# # def is_stored_locally(repo_name):
-# #     """
-# #     Return True if the *repo_name** is stored into *images_server*,
-# #     else return False.
-# #     Example:
-# #     repo name: *sameersbn/gitlab*:
-# #         GET http://127.0.0.1:3000/api/images?name=sameersbn/gitlab
-# #     """
-# #     try:
-# #         response = requests.get("http://images_server:3000/api/images?name={}"
-# #                                 .format(repo_name))
-# #         return False if response.json()['count'] == 0 else True
-# #     except ConnectionError as e:
-#         raise
-
-
 def extract_FROM(dockerfile):
     search = re.search('FROM ([^\s]+)', dockerfile)
     if search:

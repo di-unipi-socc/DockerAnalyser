@@ -3,76 +3,52 @@ import docker
 import re
 import os
 
-client_docker= docker.DockerClient(base_url="unix://var/run/docker.sock")
+# client_docker= docker.DockerClient(base_url="unix://var/run/docker.sock")
+client_docker = docker.from_env()
 
-def analysis(repo_name, context):
+
+def analysis(images_json, context):
 
     logger = context['logger']
-    docker_hub = context['hub']
     client_images = context['images']
 
-    logger.info("Received image to be analysed: " + repo_name)
+    logger.info("{0} received".format(images_json['name']))
 
-    my_image = dict()
-
-    tag = "latest"
+    logger.info("Pulling image {0} ...".format(images_json['name']))
     try:
-        # get ll athe tags associtaed with the image into the Docker hub
-        list_tags = docker_hub.get_all_tags(repo_name)
-        tag = ""
-        if "latest" in list_tags:
-            tag = "latest"
-        elif len(list_tags)>0:
-            tag = list_tags[0] # take the first tag
+        image = client_docker.images.pull(images_json['name']) # images_json['repo_name'], tag=images_json['tag'])
 
-        logger.info("Pulling image {0}:{1} ...".format(repo_name, tag))
-        # pull the images locally
-        image = client_docker.images.pull(name=repo_name, tag=tag)
-        tag = image.tags[0]
-        logger.info("{} is  pulled locally.".format(tag))
-
-        my_image['name'] = tag
-
-        # create a sleeping running container
-        container = client_docker.containers.create(tag, entrypoint="sleep 1000000000")
-        # start the container
+        container = client_docker.containers.create(images_json['name'],
+                                                    entrypoint="sleep 10000") #infinity
         container.start()
 
-        # extracts the software distributions found in the image.
         softwares = {}
-        with open(os.path.join(os.path.dirname(__file__),'softwares.json')) as json_data:
-            software= json.load(json_data)
-            # [{'opt':'python --version','regex':'[0-9]+[.][0-9]*[.0-9]*'}]:
+        with open(os.path.join(
+                  os.path.dirname(__file__), 'softwares.json')) as softwares_json:
+            software = json.load(softwares_json)
+            logger.info("{0} Searching software... ".format(images_json['name']))
             for sw in software:
-                command = sw['name']+" " + sw['cmd']
-                # create an exec instance with the command inside
-                res = container.exec_run(cmd=command)
-                output = res.decode()
-                prog = re.compile(sw['regex'])
-                match = prog.search(output)
+                command = sw['name'] + " " + sw['cmd']
+                output = container.exec_run(cmd=command).decode()
+                match = re.search(sw['regex'], output)
                 if match:
-                      version = match.group(0)
-                      #softwares.append({'software': sw['name'], 'ver': version})
-                      softwares[sw['name']] = version
-                      logger.debug("{0} {1} found.".format(sw['name'], version))
+                    version = match.group(0)
+                    softwares[sw['name']] = match.group(0)
+                    logger.debug("{0} {1} found.".format(sw['name'], version))
                 else:
-                      logger.debug("[{0}] NOT found in ".format(sw['name']))
+                    logger.debug("[{0}] NOT found in ".format(sw['name']))
 
-        #logger.info("{0} {1} found.".format(sw['name'], version))
-        logger.info('['+''.join('{} {},'.format(s,v) for s,v in softwares.items())+"]")
+        logger.info('[' + ''.join('{} {},'.format(s, v)
+                                  for s, v in softwares.items()) + "]")
 
-        my_image['softwares']  = softwares
+        images_json['softwares'] = softwares
+        client_images.post_image(images_json)
+        logger.debug("[{0}] inserted into images".format(sw['name']))
 
-        client_images.post_image(my_image)
-
-        container.stop(timeout=2) # after 2 second it stops the container with SIGKILL
+        container.stop(timeout=2)
         container.remove()
-        client_docker.images.remove(image=tag, force=True)
+        client_docker.images.remove(name, force=True)
         logger.info("Removed image {0}".format(tag))
-
-    except  docker.errors.APIError as e:
-        logger.error(str(e))
-        return False
-    except  docker.errors.ImageNotFound as e:
-        logger.error(str(e))
+    except docker.errors.ImageNotFound as e:
+        logger.exception(str(e))
         return False

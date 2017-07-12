@@ -2,8 +2,11 @@ import os
 import json
 import requests
 
+import csv
+
 url = "http://131.114.88.8:3000/api/images"
-path_file_json = os.getcwd()+"/images-graph.json"
+path_file_json = os.getcwd() + "/images-graph.json"
+path_file_csv = os.getcwd() + "/images-graph.csv"
 
 page = 1                  # first page to be downloaed
 limit = 1000             # number of images per page
@@ -38,9 +41,15 @@ with open(path_file_json, 'w') as f:
     json.dump(images_graph, f, ensure_ascii=False)
     print("Saved into {} ".format(path_file_json))
 
+# with open(path_file_json) as json_data:
+#     images_graph = json.load(json_data)
+#     print(images_graph["num_nodes"])
+#     #print(images_graph["edges"])
 
-
-with open(path_file_json) as json_data:
-    images_graph = json.load(json_data)
-    print(images_graph["num_nodes"])
-    #print(images_graph["edges"])
+images.sort(key=lambda x: x[0])
+with open(path_file_csv, 'w') as out:
+    csv_out = csv.writer(out)
+    csv_out.writerow(("node1", "node2"))
+    for edge in images:
+        csv_out.writerow()
+    print("Saved into {} ".format(path_file_csv))
