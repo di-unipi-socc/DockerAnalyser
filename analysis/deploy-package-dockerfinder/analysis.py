@@ -3,8 +3,8 @@ import docker
 import re
 import os
 
-# client_docker= docker.DockerClient(base_url="unix://var/run/docker.sock")
-client_docker = docker.from_env()
+client_docker= docker.DockerClient(base_url="unix://var/run/docker.sock")
+#client_docker = docker.from_env()
 
 
 def analysis(images_json, context):
@@ -19,7 +19,7 @@ def analysis(images_json, context):
         image = client_docker.images.pull(images_json['name']) # images_json['repo_name'], tag=images_json['tag'])
 
         container = client_docker.containers.create(images_json['name'],
-                                                    entrypoint="sleep 10000") #infinity
+                                                    entrypoint="sleep  infinity")
         container.start()
 
         softwares = {}
@@ -47,8 +47,8 @@ def analysis(images_json, context):
 
         container.stop(timeout=2)
         container.remove()
-        client_docker.images.remove(name, force=True)
-        logger.info("Removed image {0}".format(tag))
+        client_docker.images.remove(images_json['name'], force=True)
+        logger.info("Removed image {0}".format(images_json['name']))
     except docker.errors.ImageNotFound as e:
-        logger.exception(str(e))
+        logger.exception("{} image not found".format(images_json['name']))
         return False

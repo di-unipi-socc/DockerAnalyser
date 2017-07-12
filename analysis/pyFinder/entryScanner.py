@@ -6,8 +6,8 @@ import logging.config
 __doc__= """Scanner.
 
 Usage:
-    Scanner.py run [--amqp-url=<amqp://guest:guest@rabbitmq:5672>] [--ex=<dofinder>] [--queue=<images>] [--key=<images.scan>] [--images-url=<http://images_server:3000/api/images>]  [--hub-url=<https://hub.docker.com/>]
-    Scanner.py scan <name> [--tag=<latest>] [--software-url=<http://127.0.0.1:3001/api/software>]
+    Scanner.py run [--amqp-url=<amqp://guest:guest@rabbitmq:5672>] [--ex=<dofinder>] [--queue=<images>] [--key=<images.scan>] [--images-url=<http://images_server:3000/api/images>]
+    Scanner.py scan <name> [--tag=<latest>]
     Scanner.py exec <name> --p=<program>  --opt=<option>  --regex=<regex>
     Scanner.py (-h | --help)
     Scanner.py --version
@@ -19,11 +19,10 @@ Options:
   --queue==QUEUE        Queue name of the rabbitMQ server       [default: images]
   --key=KEY             Routing key used by the rabbitMQ server [default: images.scan]
   --images-url=IMAGES_URL      The url of the images service    [default: http://127.0.0.1:3000/api/images]
-  --hub-url=HUB-URL            The url of the DockerHub          [default: https://hub.docker.com]
   --tag=TAG             TAG  of the image to scan                  [default: latest]
   --p=PROGRAM           The program name to pass to the container.
   --opt=OPTION          Option of the command to run in the contianer
-  --regex=REGEX          Regular expression used to exctarct info of PROGRAM OPTION
+  --regex=REGEX          Regular expression used to extract info for PROGRAM OPTION
   --version             Show version.
 """
 
@@ -39,8 +38,7 @@ if __name__ == '__main__':
     logger.info("Logging conf: "+ log_file_path)
 
     scanner = Scanner(amqp_url=args['--amqp-url'], exchange=args['--ex'], queue=args['--queue'], route_key=args['--key'],
-                      images_url=args['--images-url'],
-                      hub_url=args['--hub-url']
+                      images_url=args['--images-url']
                       )
 
 

@@ -13,7 +13,6 @@ class Scanner:
     def __init__(self, amqp_url='amqp://guest:guest@127.0.0.1:5672',
                  exchange=None, queue=None, route_key=None,
                  images_url="http://127.0.0.1:3000/api/images",
-                 hub_url="https://hub.docker.com/",
                  socket="unix://var/run/docker.sock"
                  ):
 
