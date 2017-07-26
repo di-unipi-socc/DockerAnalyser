@@ -4,7 +4,6 @@ import re
 
 
 def analysis(image, context):
-
     logger = context['logger']
     client_images = context['images']
 
