@@ -1,6 +1,6 @@
 
 
-#  DockerLambdaAnalyser
+#  DockerAnalyser
 
 [Department of Computer Science, University of Pisa](https://www.di.unipi.it/en/)
 
@@ -8,10 +8,13 @@ Author: Davide Neri.
 
 Contact: davide.neri@di.unipi.it
 
-## What is DockerLambdaAnalyser ?
+## What is DockerAnalyser ?
 
 `DockerAnalyser` is a microservice-based architecture for customizable analysis of docker images.
 
+
+Eequirements:
+ - `docker-compose > 1.12.0`
 
 
 ## The microservice-based architecture DockerAnalyser

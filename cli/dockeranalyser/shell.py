@@ -196,9 +196,6 @@ def config():
     click.echo('Config')
 
 
-
-
-
 # cli.add_command(init)
 cli.add_command(up)
 cli.add_command(build)

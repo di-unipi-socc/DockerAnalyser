@@ -12,6 +12,21 @@ STORAGE_OPTS="--engine-storage-driver overlay2"
 
 MACHINE_OPTS="${STORAGE_OPTS} ${INSECURE_OPTS} ${REGISTRY_MIRROR_OPTS}"
 
+NETWORK="docker-analyser-net"
+
+
+function create_network(){
+  eval $(docker-machine env node-1)  # enter in the manager
+
+  if docker network ls | grep -q $NETWORK ; then
+      echo $NETWORK network already exist.
+  else
+      echo $NETWORK network not found.
+      docker network create --driver overlay  --attachable $NETWORK
+      echo "Overlay Network ceated " $NETWORK
+  fi
+}
+
 function create_nodes() {
     for i in $(seq 1 ${Size})
     do
@@ -102,14 +117,18 @@ function remove_swarm() {
 }
 
 function check_swarm(){
+  # enter in the manager environment
+  eval $(docker-machine env node-1)
   set -xe
   docker-machine ssh ${MANAGER_NODE} docker node ls
+  docker-machine stack ls
   set +xe
 }
 
 function create() {
      # Check is Virtualbox and docker-machine are installed in the system
     check_requirements
+    create_network
     # creates a the nodes or the swarm
     Command=$1
     shift

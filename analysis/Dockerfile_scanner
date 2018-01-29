@@ -8,15 +8,13 @@ RUN mkdir /code
 
 WORKDIR /code
 
-COPY  pyFinder/requirements.txt /code/
+COPY  analysis/pyFinder/requirements.txt /code/
 
 RUN pip install  -r requirements.txt
 
-COPY pyFinder/ /code
-
+COPY analysis/pyFinder/ /code
 
 RUN echo "Deploy package: $DEPLOY_PACKAGE_PATH"
-
 COPY "$DEPLOY_PACKAGE_PATH" /code/pyfinder/deploy
 
 RUN pip install -r /code/pyfinder/deploy/requirements.txt
