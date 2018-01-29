@@ -1,7 +1,8 @@
 #scanner image
 FROM python
 
-ARG deploy
+#  DEPLOY_PACKAGE_PATH: contains the path of the deploy folder (default deploy-package)
+ARG DEPLOY_PACKAGE_PATH=./deploy-package/
 
 RUN mkdir /code
 
@@ -9,17 +10,14 @@ WORKDIR /code
 
 COPY  pyFinder/requirements.txt /code/
 
-RUN pip install  --upgrade pip
-RUN pip install -r requirements.txt
-
+RUN pip install  -r requirements.txt
 
 COPY pyFinder/ /code
 
-# deploy-package containing the user-defined analysis function
-#COPY deploy-package-graph/ /code/pyfinder/deploy
 
-RUN echo "Deploying analysis function in: $deploy"
-COPY "$deploy"/ /code/pyfinder/deploy
+RUN echo "Deploy package: $DEPLOY_PACKAGE_PATH"
+
+COPY "$DEPLOY_PACKAGE_PATH" /code/pyfinder/deploy
 
 RUN pip install -r /code/pyfinder/deploy/requirements.txt
 

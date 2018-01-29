@@ -1,123 +1,24 @@
 #!/bin/sh
 
 
-NETWORK="docker-finder"
-HUB_REPOSITORY=diunipisocc/docker-finder
+STACK_NAME="docker-analyser"
+MANAGER_NODE="node-1"
 
-GITHUB_REPOSITORY=https://github.com/di-unipi-socc/DockerAnalyser.git
+# install docker-compose within the manager
+docker-machine ssh ${MANAGER_NODE} '
+sudo curl -L https://github.com/docker/compose/releases/download/1.18.0/docker-compose-`uname -s`-`uname -m` -o /usr/local/bin/docker-compose;
+sudo chmod +x /usr/local/bin/docker-compose;
+docker-compose --version;'
 
+# enter into the manager environment
+eval $(docker-machine env node-1)
 
-CONSTRAINT_NODE="node-2"
-
-###################################################
-###############   STORAGE PHASE ####################
-#####################################################
-
-# Images database
-docker service create --network $NETWORK --name images_db  \
-  --constraint  $CONSTRAINT_NODE \
-  --mount src=df-images,dst=/data/db \
-  mongo:3 > /dev/null
-  if [ $? -eq 0 ]
-    then
-      echo "images_db:service created"
-    else
-      echo "Could not create images_db service" >&2
-      exit 1
-  fi
-
-# Images software_server
-docker service create --network $NETWORK   --name images_server  \
-    --constraint $CONSTRAINT_NODE \
-    -p 3000:3000 $HUB_REPOSITORY:images_server  > /dev/null
-if [ $? -eq 0 ]
-    then
-      echo "images_server service created"
-    else
-      echo "Could not create images_server service" >&2
-      exit 1
-fi
-
-#####################################################
-###############   ANALYSIS PHASE ####################
-#####################################################
-#RABBITMQ_NODENAME=rabbitmq -e RABBITMQ_SERVICENAME=rabbitsv \
-# RabbitMQ service
-docker service create --network $NETWORK --name rabbitmq  -e HOSTNAME=rabbitmq  -e NODE_IP_ADDRESS=0.0.0.0 \
-  --constraint  $CONSTRAINT_NODE \
-  --mount src=rabbit-volume,dst=/var/lib/rabbitmq \
-  -p  8082:15672 \
-  -p  5672:5672  rabbitmq:3-management > /dev/null
-if [ $? -eq 0 ]
-      then
-        echo "rabbitmq: service created"
-      else
-        echo "Could not create rabbitmq service" >&2
-        exit 1
-  fi
-
-# Crawler service
-docker service create  --network $NETWORK  --name crawler \
-  --constraint  $CONSTRAINT_NODE \
-  --mount type=volume,source=crawler-volume,destination=/data/crawler \
-  $HUB_REPOSITORY:crawler crawl  \
-  --images-url=http://images_server:3000/api/images \
-  --amqp-url=amqp://guest:guest@rabbitmq:5672  \
-  --save-url=/data/crawler/lasturl.txt \
-  --queue=images --fp=1 --ps=100   > /dev/null #--mi=100
-  if [ $? -eq 0 ]
-        then
-          echo "crawler: service created"
-        else
-          echo "Could not create crawler service" >&2
-          exit 1
-    fi
-
-# Scanner service
-# #--constraint $CONSTRAINT_NODE_SCANNER \
-docker service create  --network $NETWORK  --name scanner  \
-    --constraint $CONSTRAINT_NODE_SCANNER \
-      --mount type=bind,source=/var/run/docker.sock,destination=/var/run/docker.sock \
-       $HUB_REPOSITORY:scanner run \
-      --images-url=http://images_server:3000/api/images  \
-      --amqp-url=amqp://guest:guest@rabbitmq:5672   --queue=images  --key=images.scan  \
-      --software-url=http://software_server:3001/api/software  --rmi  > /dev/null
-if [ $? -eq 0 ]
-    then
-        echo "scanner: service created"
-    else
-        echo "Could not create scanner service" >&2
-        exit 1
-fi
-
-
-#Checker service
-docker service create  --network $NETWORK  --name checker  \
-      --constraint  $CONSTRAINT_NODE \
-      --mount type=bind,source=/dockerfinder/checker/log,destination=/data/checker/log \
-       $HUB_REPOSITORY:checker run \
-       --interval=300 --path-logging=/data/checker/log/stats.log \
-       --images-url=http://images_server:3000/api/images \
-       --queue=images --key=images.scan \
-       --amqp-url=amqp://guest:guest@rabbitmq:5672    > /dev/null
-if [ $? -eq 0 ]
-    then
-        echo "Checker: service created"
-    else
-        echo "Could not create Checker service" >&2
-        exit 1
-fi
-
-#####################################################
-###############   MONITOR PHASE ####################
-#####################################################
-docker service create  --network $NETWORK  -p 3002:3002 --name monitor \
-  --constraint  $CONSTRAINT_NODE \
-  $HUB_REPOSITORY:monitor > /dev/null
-  if [ $? -eq 0 ]
-      then
-          echo "monitor: service created"
-      else
-          echo "Could not create monitor service" >&2
-          exit 1
-  fi
+# starts a local registry inside the manager node
+docker service create --name registry --publish published=5000,target=5000 registry:2
+# build the images
+docker-compose -f ../docker-compose-myregistry.yml build 
+#docker-compose -f ../docker-compose-myregistry.yml build --build-arg deploy="../analysis/deploy-package-dockerfinder"
+# push the images into the local registry
+docker-compose -f ../docker-compose-myregistry.yml push
+# run the services in a stack
+docker stack deploy --compose-file ../docker-compose-myregistry.yml ${STACK_NAME}

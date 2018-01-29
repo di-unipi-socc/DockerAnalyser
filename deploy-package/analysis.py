@@ -1,13 +1,12 @@
 
-
 def analysis(json_image, context):
 
     logger = context['logger']
     client_images_server = context['images']
 
-    logger.info("{} image received ".format(json_image['name']))
+    logger.info("{}: received. ".format(json_image['name']))
+    client_images_server.post_image(json_image);
 
-    # Json received from the rabbitMQ:
     # {'star_count': 107,
     # 'pull_count': 1430790,
     # 'repo_owner': None,
