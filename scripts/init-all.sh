@@ -1,5 +1,6 @@
 # !/usr/bin/env bash
 Size=3
+MANAGER_NODE="node-1"
 
 if [ -z "${DOCKER_MACHINE_DRIVER}" ]; then
     DOCKER_MACHINE_DRIVER=virtualbox
@@ -52,11 +53,15 @@ function create_swarm() {
     set +xe
 
     # Fetch Tokens
-    ManagerToken=`docker-machine ssh node-1 docker swarm join-token manager | grep token | awk '{ print $2 }'`
-    WorkerToken=`docker-machine ssh node-1 docker swarm join-token worker | grep token | awk '{ print $2 }'`
+    # ManagerToken=`docker-machine ssh node-1 docker swarm join-token manager | grep token | awk '{ print $2 }'`
+    ManagerToken=`docker-machine ssh node-1 docker swarm join-token manager | grep token | awk '{ print $5 }'`
+
+    # WorkerToken=`docker-machine ssh node-1 docker swarm join-token worker | grep token | awk '{ print $2 }'`
+    WorkerToken=`docker-machine ssh node-1 docker swarm join-token worker | grep token | awk '{ print $5 }'`
+
 
     echo "Manager Token: ${ManagerToken}"
-    echo "Workder Token: ${WorkerToken}"
+    echo "Worker Token: ${WorkerToken}"
 
     # Managers
     if [ "${NumberOfManager}" -gt 2 ]; then
@@ -96,7 +101,15 @@ function remove_swarm() {
     done
 }
 
+function check_swarm(){
+  set -xe
+  docker-machine ssh ${MANAGER_NODE} docker node ls
+  set +xe
+}
+
 function create() {
+     # Check is Virtualbox and docker-machine are installed in the system
+    check_requirements
     # creates a the nodes or the swarm
     Command=$1
     shift
@@ -118,11 +131,11 @@ function remove() {
 }
 
 function check_requirements() {
-  echo 'Checking requirements.'
+  echo 'Checking  requirements.'
   if ! [ -x "$(command -v virtualbox)" ]; then
-      echo "virtualbox is not installed. Install virtualbox (https://www.virtualbox.org/wiki/Downloads) and try again."
+      echo "Virtualbox is not installed. Install virtualbox (https://www.virtualbox.org/wiki/Downloads) and try again."
   else
-     echo 'virtualbox is installed.'
+     echo '    Virtualbox is installed in the system.'
   fi
   if ! [ -x "$(command -v docker-machine)" ]; then  # check if Docker-mcahine is installed
     echo 'docker-machine is not installed.'
@@ -131,19 +144,19 @@ function check_requirements() {
   	chmod +x /tmp/docker-machine && \ &> /dev/null
   	sudo cp /tmp/docker-machine /usr/local/bin/docker-machine
   else
-     echo 'docker-machine is installed.'
+     echo '   docker-machine is installed in the system'
   fi
-
 }
+
 function main() {
 
     Command=$1
-    check_requirements
     shift
     case "${Command}" in
         create) create "$@" ;;
         remove) remove "$@" ;;
-        *)      echo "Usage: $0 <create|remove>" ;;
+        check) check_swarm ;;
+        *)      echo "Usage: $0 <create|remove|check>" ;;
     esac
 }
 
