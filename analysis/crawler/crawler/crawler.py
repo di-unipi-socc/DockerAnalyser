@@ -1,7 +1,6 @@
 import logging
 import random
 import json
-import pickle
 from .core.publisher_rabbit import PublisherRabbit
 from .core.client_dockerhub import ClientHub
 
@@ -27,7 +26,7 @@ class Crawler:
         self.logger = logging.getLogger(__class__.__name__)
         self.logger.info(__class__.__name__ + " logger  initialized")
 
-        # publish the images downloaded into the rabbitMQ server.
+        # object used to publish the images json  into the rabbitMQ queue.
         self.publisher = PublisherRabbit(
             amqp_url, exchange=exchange, queue=queue, route_key=route_key)
 
@@ -174,7 +173,7 @@ class Crawler:
             if sent_images % 100 == 0:
                 self.logger.info(
                     "{0} number of images sent to analyser".format(sent_images))
-            yield json.dumps(image)  # json.dumps({"name": repo_name})
+            yield json.dumps(image)
 
             #self.logger.info("{0}/{1} (Current samples/Target samples)".format(str(sent_images), str(count)))
             #self.logger.info("Number of images sent to queue: {0}".format(str(sent_images)))

@@ -46,6 +46,7 @@ class PublisherRabbit(object):
         #self.logger = utils.get_logger(__name__, logging.INFO)
         self.logger = logging.getLogger(__class__.__name__)
         self.logger.info(__class__.__name__ + " logger  initialized")
+        self.logger.info("{} rabbitMq url ".format(self._url))
 
 
 
@@ -236,6 +237,7 @@ class PublisherRabbit(object):
 
         for json_image in self.images_generator:
             self.publish_message(json_image)
+            self.logger.info('Publised message to rabbitMQ {}'.format(json_image))
 
 
     def enable_delivery_confirmations(self):

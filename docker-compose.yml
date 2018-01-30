@@ -10,8 +10,8 @@ services:
   crawler:
     image: diunipisocc/docker-finder:crawler
     build:
-     context: analysis
-     dockerfile: ./Dockerfile_crawler
+     context: analysis/
+     dockerfile: Dockerfile_crawler
     command: [crawl,'--save-url=/data/crawler/lasturl.txt',
                     '--amqp-url=amqp://guest:guest@rabbitmq:5672',
                     '--images-url=http://images_server:3000/api/images/',
@@ -35,7 +35,7 @@ services:
     restart: on-failure:3
     ports:
       - 8082:15672
-      - 5672:5672
+      # - 5672:5672
     volumes:
       - rabbitmq_volume:/var/lib/rabbitmq
 
@@ -52,12 +52,6 @@ services:
                   ]
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
-    # deploy:
-    #   mode: replicated
-    #   replicas: 10
-    #   restart_policy:
-    #       condition: on-failure
-
 
   # ###############   STORAGE ####################
   images_server:
