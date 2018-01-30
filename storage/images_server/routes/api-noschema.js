@@ -25,9 +25,6 @@ Image.before('get', function (req, res, next) {
        if (!key.inList(_reservedkey)){
           // check if is a number or a string
           console.log(key + " " + req.query[key])
-          //var value = parseInt(req.query[key]);
-          //if (isNaN(value)) value = req.query[key];
-          //findMatch[key] = {$eq: value}
           findMatch[key] = { $eq: req.query[key] }
           console.log(findMatch)
         }
@@ -80,6 +77,8 @@ Image.before('get', function (req, res, next) {
 });
 
 Image.register(router,'/images');
+// Image.register(router,'/images');
+
 
 // Return router
 module.exports = router;

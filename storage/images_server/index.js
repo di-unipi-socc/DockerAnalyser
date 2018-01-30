@@ -4,7 +4,7 @@ var express = require('express');
 var mongoose = require('mongoose');
 var bodyParser = require('body-parser');
 
-var Image = require('./models/image')
+// var Image = require('./models/image')
 //var db_path = 'mongodb://172.17.0.2/images';
 //var port = 8081;
 
@@ -38,33 +38,33 @@ app.use(function (req, res, next) {
     console.log(req.method +" "+req.originalUrl);
     next();
 });
-
-app.all('*', function(req, res,next) {
-    /**
-     * Response settings
-     * @type {Object}
-     */
-    var responseSettings = {
-        "AccessControlAllowOrigin": req.headers.origin,
-        "AccessControlAllowHeaders": "Content-Type,X-CSRF-Token, X-Requested-With, Accept, Accept-Version, Content-Length, Content-MD5,  Date, X-Api-Version, X-File-Name",
-        "AccessControlAllowMethods": "POST, GET, PUT, DELETE, OPTIONS",
-        "AccessControlAllowCredentials": true
-    };
-    /**
-     * Headers
-     */
-    res.header("Access-Control-Allow-Credentials", responseSettings.AccessControlAllowCredentials);
-    res.header("Access-Control-Allow-Origin", responseSettings.AccessControlAllowOrigin);
-    res.header("Access-Control-Allow-Headers", (req.headers['access-control-request-headers']) ? req.headers['access-control-request-headers'] : "x-requested-with");
-    res.header("Access-Control-Allow-Methods", (req.headers['access-control-request-method']) ? req.headers['access-control-request-method'] : responseSettings.AccessControlAllowMethods);
-
-    if ('OPTIONS' == req.method) {
-        res.send(200);
-    }
-    else {
-        next();
-    }
-});
+//
+// app.all('*', function(req, res,next) {
+//     /**
+//      * Response settings
+//      * @type {Object}
+//      */
+//     var responseSettings = {
+//         "AccessControlAllowOrigin": req.headers.origin,
+//         "AccessControlAllowHeaders": "Content-Type,X-CSRF-Token, X-Requested-With, Accept, Accept-Version, Content-Length, Content-MD5,  Date, X-Api-Version, X-File-Name",
+//         "AccessControlAllowMethods": "POST, GET, PUT, DELETE, OPTIONS",
+//         "AccessControlAllowCredentials": true
+//     };
+//     /**
+//      * Headers
+//      */
+//     res.header("Access-Control-Allow-Credentials", responseSettings.AccessControlAllowCredentials);
+//     res.header("Access-Control-Allow-Origin", responseSettings.AccessControlAllowOrigin);
+//     res.header("Access-Control-Allow-Headers", (req.headers['access-control-request-headers']) ? req.headers['access-control-request-headers'] : "x-requested-with");
+//     res.header("Access-Control-Allow-Methods", (req.headers['access-control-request-method']) ? req.headers['access-control-request-method'] : responseSettings.AccessControlAllowMethods);
+//
+//     if ('OPTIONS' == req.method) {
+//         res.send(200);
+//     }
+//     else {
+//         next();
+//     }
+// });
 
 app.use(function(err, req, res, next) {
     // logic
@@ -156,8 +156,9 @@ app.use('/search', require('./routes/search-paginated'))
 // /api/images route with fixed json schema
 //app.use('/api', require('./routes/api'));
 
-// api schema less
+// api schema -ess
 app.use('/api', require('./routes/api-noschema'));
+
 
 // development error handler
 // will print stacktrace
@@ -172,7 +173,6 @@ if (app.get('env') === 'development') {
 }
 
 // production error handler
-
 // no stacktraces leaked to user
 app.use(function(err, req, res, next) {
       res.status(err.status || 500);

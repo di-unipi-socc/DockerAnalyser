@@ -4,7 +4,8 @@
 "use strict";
 var express = require('express');
 var router = express.Router();
-var Image = require('../models/image');
+// var Image = require('../models/image');
+var Image = require('../models/image-noschema');
 
 
 //method for looking if a string is in a list
