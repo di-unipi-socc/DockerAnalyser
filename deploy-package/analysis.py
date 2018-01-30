@@ -2,10 +2,10 @@
 def analysis(json_image, context):
 
     logger = context['logger']
-    client_images_server = context['images']
+    client_images = context['images']
 
     logger.info("{}: received. ".format(json_image['name']))
-    client_images_server.post_image(json_image);
+    client_images.post_image(json_image);
 
     # {'star_count': 107,
     # 'pull_count': 1430790,

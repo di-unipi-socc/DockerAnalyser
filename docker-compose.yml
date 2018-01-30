@@ -6,7 +6,7 @@ version: "3"
 
 services:
 
-  ###############   ANALYSIS PHASE ####################
+  ###############   ANALYSIS ####################
   crawler:
     image: diunipisocc/docker-finder:crawler
     build:
@@ -25,16 +25,9 @@ services:
                     '--min-stars=3',
                     '--min-pulls=0',
                     #'--only-official',
-                    '--only-automated',
-
-                    ]
-    #,'--si=100'] #, '--fp=100', '--ps=10']
+                    '--only-automated',]
     volumes:
           - crawler_volume:/data/crawler/
-    deploy:
-      placement:
-        constraints:
-            - node.hostname==swarm-manager
 
   rabbitmq:
     image: rabbitmq:3-management
@@ -42,53 +35,40 @@ services:
     restart: on-failure:3
     ports:
       - 8082:15672
+      - 5672:5672
     volumes:
       - rabbitmq_volume:/var/lib/rabbitmq
-    deploy:
-      placement:
-        constraints:
-            - node.hostname==swarm-manager
 
   scanner:
     image: diunipisocc/docker-finder:scanner
     build:
-      context: analysis
+      context: .
+      dockerfile: analysis/Dockerfile_scanner
       args:
-        deploy: deploy-package
-      dockerfile: ./Dockerfile_scanner
+        DEPLOY_PACKAGE_PATH: ./deploy-package
     command: [run, '--images-url=http://images_server:3000/api/images/',
                   '--queue=images',
                   '--key=images.scan',
                   ]
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
-
-    deploy:
-      mode: replicated
-      replicas: 10
-      placement:
-        constraints:
-            - node.hostname != swarm-manager
-      restart_policy:
-          condition: on-failure
+    # deploy:
+    #   mode: replicated
+    #   replicas: 10
+    #   restart_policy:
+    #       condition: on-failure
 
 
-  # #####################################################
-  # ###############   STORAGE PHASE ####################
-  # #####################################################
+  # ###############   STORAGE ####################
   images_server:
       build: storage/images_server
       image: diunipisocc/docker-finder:images_server
       hostname: images_server
       restart: on-failure:3
       ports:
-        - "3000:3000"
+        - "3000:3000" #3000
       depends_on:
         - images_db
-      deploy:
-         placement:
-            constraints:
-               - node.hostname == swarm-manager
 
   images_db:
       image: mongo:3
@@ -96,11 +76,6 @@ services:
       hostname: images_db
       volumes:
         -  images_db_volume:/data/db
-      deploy:
-         placement:
-            constraints:
-               - node.hostname == swarm-manager
-
 
 volumes:
   crawler_volume:

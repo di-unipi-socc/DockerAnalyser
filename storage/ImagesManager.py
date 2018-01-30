@@ -58,33 +58,33 @@ def yield_images_from_page(url="http://127.0.0.1:3000/api/images", page=1, limit
 
 
 def pull_images(path_file_json, url="http://127.0.0.1:3000/api/images"):
-    # with open(path_file_json, mode='w', encoding='utf-8') as f:
-    #     json.dump([], f)
     list_json_images = list()
     for image in yield_all_images(url):
         list_json_images.append(image)
-
     with open(path_file_json, 'w') as f:
         json.dump(list_json_images, f, ensure_ascii=False)
         print("{} images saved into {}".format(len(list_json_images),path_file_json))
 
-
+def get_image_from_name(name, url="http://127.0.0.1:3000/api/images"):
+    res = requests.get(url, params={'name': name}).json()
+    print(res['images'][0]) if res['images'] else print("{} - not found".format(name))
 
 
 
 __doc__ = """ImagesManager
-
 Usage:
-  Tester.py pull  [--file=<images.json>] [--images-url=<http://127.0.0.1:3000/api/images>]
-  Tester.py upload [--file=<images.json>] [--images-url=<http://127.0.0.1:3000/api/images>]
-  Tester.py rm    [--images-url=<http://127.0.0.1:3000/api/images>]
-  Tester.py (-h | --help)
-  Tester.py --version
+  ImagesManager.py download  [--file=<images.json>] [--images-url=<http://127.0.0.1:3000/api/images>]
+  ImagesManager.py upload [--file=<images.json>] [--images-url=<http://127.0.0.1:3000/api/images>]
+  ImagesManager.py rm    [--images-url=<http://127.0.0.1:3000/api/images>]
+  ImagesManager.py get [--name=<name>]    [--images-url=<http://127.0.0.1:3000/api/images>]
+  ImagesManager.py (-h | --help)
+  ImagesManager.py --version
 
 Options:
   -h --help     Show this screen.
   --file=FILE        File JSON with all the images   [default: images.json]
   --images-url=IMAGESSERVICE  Url images service [default: http://127.0.0.1:3000/api/images].
+  --ellerbrock/bash-it:latest=IMAGE_NAME        Return the json of the the image (repo:tag).
   --version     Show version.
 """
 
@@ -93,8 +93,11 @@ if __name__ == "__main__":
     if args['upload']:
         upload_images(args['--file'], args['--images-url'])
 
-    if args['pull']:
+    if args['download']:
         pull_images(path_file_json=args['--file'], url=args['--images-url'])
 
     if args['rm']:
         delete_all_images(args['--images-url'])
+
+    if args['get']:
+        get_image_from_name(name=args['--name'], url=args['--images-url'])

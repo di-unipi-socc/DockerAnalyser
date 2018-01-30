@@ -41,8 +41,7 @@ if __name__ == '__main__':
                         route_key=args['--key'],
                         images_url=args['--images-url'],
                         hub_url=args['--hub-url'],
-                        path_file_logging=args['--path-logging']
-                        )
+                        path_file_logging=args['--path-logging'])
 
     if args['run']:
         checker.run(interval_next_check=int(args['--interval']))

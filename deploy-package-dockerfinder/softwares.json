@@ -1,66 +1,66 @@
 [{
 		"name": "python",
-		"cmd": "--version",
+		"cmd": "python --version",
 		"regex": "[0-9]+[.][0-9]*[.0-9]*"
 	}, {
 		"name": "java",
-		"cmd": "-version",
+		"cmd": "java -version",
 		"regex": "[0-9]+[.][0-9]*[.0-9]*"
 	}, {
 		"name": "perl",
-		"cmd": "-version",
+		"cmd": "perl -version",
 		"regex": "[0-9]+[.][0-9]*[.0-9]*"
 	}, {
 		"name": "curl",
-		"cmd": "--version",
+		"cmd": "curl --version",
 		"regex": "[0-9]+[.][0-9]*[.0-9]*"
 	}, {
 		"name": "nano",
-		"cmd": "--version",
+		"cmd": "nano --version",
 		"regex": "[0-9]+[.][0-9]*[.0-9]*"
 	}, {
 		"name": "php",
-		"cmd": "-v",
+		"cmd": "php -v",
 		"regex": "[0-9]+[.][0-9]*[.0-9]*"
 	},{
 		"name": "ruby",
-		"cmd": "--version",
+		"cmd": "ruby --version",
 		"regex": "[0-9]+[.][0-9]*[.0-9]*"
 	}, {
 		"name": "scala",
-		"cmd": "-version",
+		"cmd": "scala -version",
 		"regex": "[0-9]+[.][0-9]*[.0-9]*"
 	}, {
 		"name": "groovy",
-		"cmd": "-version",
+		"cmd": "groovy -version",
 		"regex": "[0-9]+[.][0-9]*[.0-9]*"
 	},{
 		"name": "httpd",
-		"cmd": "-V",
+		"cmd": "httpd -V",
 		"regex": "[0-9]+[.][0-9]*[.0-9]*"
 	}, {
 		"name": "nginx",
-		"cmd": "-v",
+		"cmd": "nginx -v",
 		"regex": "[0-9]+[.][0-9]*[.0-9]*"
 	}, {
 		"name": "pip",
-		"cmd": "--version",
+		"cmd": "pip --version",
 		"regex": "[0-9]+[.][0-9]*[.0-9]*"
 	}, {
 		"name": "node",
-		"cmd": "-v",
+		"cmd": "node -v",
 		"regex": "[0-9]+[.][0-9]*[.0-9]*"
 	}, {
 		"name": "npm",
-		"cmd": "-v",
+		"cmd": "npm -v",
 		"regex": "[0-9]+[.][0-9]*[.0-9]*"
 	}, {
 		"name": "gunicorn",
-		"cmd": "--version",
+		"cmd": "gunicorn --version",
 		"regex": "[0-9]+[.][0-9]*[.0-9]*"
 	},{
 		"name": "wget",
-		"cmd": "--version",
+		"cmd": "wget --version",
 		"regex": "[0-9]+[.][0-9]*[.0-9]*"
 	}
 ]

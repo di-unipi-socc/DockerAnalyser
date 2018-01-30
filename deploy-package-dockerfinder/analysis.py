@@ -28,8 +28,7 @@ def analysis(images_json, context):
             software = json.load(softwares_json)
             logger.info("{0} Searching software... ".format(images_json['name']))
             for sw in software:
-                command = sw['name'] + " " + sw['cmd']
-                output = container.exec_run(cmd=command).decode()
+                output = container.exec_run(cmd=sw['cmd']).decode()
                 match = re.search(sw['regex'], output)
                 if match:
                     version = match.group(0)
@@ -52,3 +51,4 @@ def analysis(images_json, context):
     except docker.errors.ImageNotFound as e:
         logger.exception("{} image not found".format(images_json['name']))
         return False
+    return True

@@ -11,13 +11,10 @@ Contact: davide.neri@di.unipi.it
 ## What is DockerAnalyser ?
 
 `DockerAnalyser` is a microservice-based architecture for customizable analysis of docker images.
+It permits building  custom Docker image analysers.
 
 
-Eequirements:
- - `docker-compose > 1.12.0`
-
-
-## The microservice-based architecture DockerAnalyser
+<!-- ## The microservice-based architecture DockerAnalyser
 
 The figure below details the microservice-based architecture of Docker Finder. The microservice (represented as rectangles) are divided in the three three main functionalities carried out by Docker Finder:
   1. **[Analysis](https://github.com/di-unipi-socc/DockerFinder/tree/master/analysis)**: the analysis of each image consists in retrieving all the metadata already available in the registry, and in running a container to au-
@@ -27,27 +24,22 @@ descriptions in a local repository.
 
 <div align="center">
 <img src="./docs/architecture.png" width="500">
-</div>
-
-## Uses cases: DockerGraph and DockerFinder
-
-Starting from DockerAnalyser any tool analysis Docker imges can be creates.
-Two use cases are already available
-- `DockerGraph`: constructs a Knowledge base representing a directed graph of the dependencies among the repository name in Docker Hub.
-- `DockerFinder`: permits to search the images based on the software distribution that are supported (e.g., search the images that support `Python 2.7`)
-
+</div> -->
 
 ## Getting started
 DockerAnalyser is shipped in Docker Containers and can be deployed using `Docker Compose`
 
 The requirements are the following:
 
- - [**Docker engine >= 1.12**](https://docs.docker.com/engine/installation/)
- - [**Docker Compose >= 1.9.0**](https://docs.docker.com/compose/install/)
+ - [**Docker engine >= 1.13**](https://docs.docker.com/engine/installation/)
+ - [**Docker Compose >= 1.12.0**](https://docs.docker.com/compose/install/)
+
+ Two use cases are already available
+ - `DockerGraph`: constructs a Knowledge base representing a directed graph of the dependencies among the repository name in Docker Hub.
+ - `DockerFinder`: permits to search the images based on the software distribution that are supported (e.g., search the images that support `Python 2.7`)
 
 ### Deploy DockerFinder
-The `deploy-package-dockerfinder` in the `analysis` folder contains the analysis function of
-'DockerFinder'.
+The `deploy-package-dockerfinder`  folder contains the analysis function of 'docker-finder'.
 
 In ordet to build `scanner` microservice running the analysis function of `DockerFinder`:
 ```

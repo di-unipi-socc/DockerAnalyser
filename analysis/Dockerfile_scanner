@@ -8,16 +8,15 @@ RUN mkdir /code
 
 WORKDIR /code
 
-COPY  analysis/pyFinder/requirements.txt /code/
-
+COPY  analysis/scanner/   /code
 RUN pip install  -r requirements.txt
 
-COPY analysis/pyFinder/ /code
+#COPY analysis/pyFinder/ /code
 
-RUN echo "Deploy package: $DEPLOY_PACKAGE_PATH"
-COPY "$DEPLOY_PACKAGE_PATH" /code/pyfinder/deploy
+RUN echo "Selected Deploy package: $DEPLOY_PACKAGE_PATH"
+COPY "$DEPLOY_PACKAGE_PATH" /code/scanner/scanner/deploy
 
-RUN pip install -r /code/pyfinder/deploy/requirements.txt
+RUN pip install -r /code/scanner/scanner/deploy/requirements.txt
 
 ENTRYPOINT ["python","/code/entryScanner.py"]
 CMD ["--help"]

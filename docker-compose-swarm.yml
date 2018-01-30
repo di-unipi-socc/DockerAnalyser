@@ -28,29 +28,19 @@ services:
                     '--only-automated',
 
                     ]
-    networks:
-      - docker-analyser-net
+    # networks:
+    #   - docker-analyser-net
     volumes:
           - crawler_volume:/data/crawler/
-    # deploy:
-    #   placement:
-    #     constraints:
-    #         - node.hostname==swarm-manager
 
   rabbitmq:
     image: rabbitmq:3-management
     hostname: rabbitmq
     restart: on-failure:3
-    networks:
-      - docker-analyser-net
-    # ports:
-    #   - 8082:15672
+    # networks:
+    #   - docker-analyser-net
     volumes:
       - rabbitmq_volume:/var/lib/rabbitmq
-    # deploy:
-    #   placement:
-    #     constraints:
-    #         - node.hostname==swarm-manager
 
   scanner:
     image: 127.0.0.1:5000/diunipisocc/docker-finder:scanner
@@ -62,8 +52,8 @@ services:
     command: [run, '--images-url=http://images_server:3000/api/images/',
                   '--queue=images',
                   '--key=images.scan']
-    networks:
-      - docker-analyser-net
+    # networks:
+    #   - docker-analyser-net
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
 
@@ -94,9 +84,6 @@ services:
       deploy:
         restart_policy:
           condition: on-failure
-        #  placement:
-        #     constraints:
-        #        - node.hostname == swarm-manager
 
   images_db:
       image: mongo:3
@@ -109,9 +96,7 @@ services:
       deploy:
         restart_policy:
           condition: on-failure
-        #  placement:
-        #     constraints:
-        #        - node.hostname == swarm-manager
+
 
 volumes:
   crawler_volume:
