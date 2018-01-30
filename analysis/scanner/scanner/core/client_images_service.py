@@ -32,8 +32,10 @@ class ClientImages:
                 self.logger.error(str(res.status_code) + ": " + res.text)
         except requests.exceptions.ConnectionError as e:
             self.logger.exception("ConnectionError: ")
+            raise
         except:
             self.logger.exception("Unexpected error:")
+            raise
 
     def put_image(self, dict_image):
         """Update an image description"""

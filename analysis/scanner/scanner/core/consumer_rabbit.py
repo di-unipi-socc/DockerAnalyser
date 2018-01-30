@@ -273,9 +273,12 @@ class ConsumerRabbit(object):
         self.logger.debug('Received message # %s from %s: %s',
                           basic_deliver.delivery_tag, properties.app_id, body)
 
-        processed = self.on_message_callback(
-            json.loads(body.decode()))  # .decode("utf-8")))
-
+        try:
+            processed = self.on_message_callback(
+                json.loads(body.decode()))  # .decode("utf-8")))
+        except:
+            self.logger.exception("Error: ")
+            raise
         if not processed:
             self.purge_message(basic_deliver.delivery_tag)
         else:

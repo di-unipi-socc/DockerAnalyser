@@ -1,5 +1,5 @@
 from .core.client_images_service import ClientImages
-from .core.consumer_rabbit import  ConsumerRabbit
+from .core.consumer_rabbit import ConsumerRabbit
 
 # import the analysis function stotred into the deploy folder
 from .deploy.analysis import analysis
@@ -23,11 +23,9 @@ class Scanner:
         self.logger.info(__class__.__name__ + " logger  initialized")
 
         #  rabbit consumer of RabbittMQ: receives the images name to scan,
-        #  on_message_callback is called when a message is received
         self.consumer = ConsumerRabbit(amqp_url=amqp_url, exchange=exchange,
                                        queue=queue, route_key=route_key,
                                        on_msg_callback=self.on_message_ctx)
-
         # client of Images Service: GET;P OST; PUT; DELETE methods
         self.client_images = ClientImages(images_url=images_url)
 
@@ -44,6 +42,6 @@ class Scanner:
         self.ctx = {'logger': self.logger,
                     'images': self.client_images}
 
-        self.logger.debug(
+        self.logger.info(
             "Received message from RabbitMQ. Calling analysis() of the lambda function")
         return analysis(json_message, self.ctx)
