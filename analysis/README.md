@@ -15,7 +15,7 @@ Analysis
 |
 |___DockerFile_scanner: defines the scanner image.
 |___DockerFile_crawler: defines the crawler image.
-|___DockerFile_checker: defindes the cheker image.
+|___DockerFile_checker: defindes the checker image.
 |
 |____pyFinder:
      |  
