@@ -1,4 +1,5 @@
 # !/usr/bin/env bash
+
 Size=3
 MANAGER_NODE="node-1"
 
