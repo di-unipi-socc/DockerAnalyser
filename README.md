@@ -1,5 +1,3 @@
-
-
 #  DockerAnalyser
 
 [Department of Computer Science, University of Pisa](https://www.di.unipi.it/en/)
@@ -8,73 +6,48 @@ Author: Davide Neri.
 
 Contact: davide.neri@di.unipi.it
 
-## What is DockerAnalyser ?
-
-`DockerAnalyser` is a microservice-based architecture for customizable analysis of docker images.
-It permits building  custom Docker image analysers.
+## DockerAnalyser in a  nutshell
 
 
-<!-- ## The microservice-based architecture DockerAnalyser
+> `DockerAnalyser` is a microservice-based tool that permits building analysers of Docker images.
 
-The figure below details the microservice-based architecture of Docker Finder. The microservice (represented as rectangles) are divided in the three three main functionalities carried out by Docker Finder:
-  1. **[Analysis](https://github.com/di-unipi-socc/DockerFinder/tree/master/analysis)**: the analysis of each image consists in retrieving all the metadata already available in the registry, and in running a container to au-
-tomatically extract its runtime features (e.g., the software distributions it support).
-  2. **[Storage](https://github.com/di-unipi-socc/DockerFinder/tree/master/storage)**:  DockerFinder stores all produced image
-descriptions in a local repository.
+
+DockerAnalyser (figure below) is designed to
+ - crawl Docker images from a remote Docker registry (e.g. Docker Hub),
+ - analyse each image by running an analysis function, and
+ - store the results into a local database.
 
 <div align="center">
-<img src="./docs/architecture.png" width="500">
-</div> -->
+  <img  src="./data/docs/docker-analyser.png" width="400">
+</div>
 
-## Getting started
-DockerAnalyser is shipped in Docker Containers and can be deployed using `Docker Compose`
+## The architectue of DockerAnlyser
+DockerAnalyser is a microservice-based architecture (figure below).
+Each microservice is responsable to manage a single operation of the architectue:
+ - **crawler**: crawls the Docker image *names* to be analysed from a remote Docker registry.
+ - **rabbitMQ**: is a Message Broker that store the names of the images to be analysed (from the Crawler) into a messages queue, and it permits the Scanners to retrieve them.
+ - **scanner**: retrieves the name of the images from the Message Broker, and for each name received it runs an *analysis function*.
+ - **ImagesService** and **ImagesDB**: is the microservice that store the obtained description ina local storage.  **ImagesService** exposes the APIs while **ImagesDB** is a NOsql database.
 
-The requirements are the following:
+ <div align="center">
+ <img  src="./data/docs/architecture.png" width="300">
+ </div>
 
- - [**Docker engine >= 1.13**](https://docs.docker.com/engine/installation/)
- - [**Docker Compose >= 1.12.0**](https://docs.docker.com/compose/install/)
+## How to create a new Docker image analyser
+> Users can build their own image analysers by replacing the  *analysis analysis* function (contained in the **deploy package**)  executed by the *scanner* microservice.
 
- Two use cases are already available
- - `DockerGraph`: constructs a Knowledge base representing a directed graph of the dependencies among the repository name in Docker Hub.
- - `DockerFinder`: permits to search the images based on the software distribution that are supported (e.g., search the images that support `Python 2.7`)
 
-### Deploy DockerFinder
-The `deploy-package-dockerfinder`  folder contains the analysis function of 'docker-finder'.
+More precisley, the steps needed to create an analyser are the following:
+1. Clone the [GitHub ](https://github.com/di-unipi-socc/DockerAnalyser.git) repository of DockerAnlyser locally.
+2. Create a folder *F* (that represents the **deploy package**) and inside the created folder
+create the following files:
+ - The *analysis.py* file that contains the code of the custom analysis function,
+ - The *requirements.txt* file that contains the Python library dependencies † ,
+ - Any other file needed by the analysis function (e.g., configuration files)
+3. Build the Scanner Docker image with  [Docker Compose](https://docs.docker.com/compose/install/) by running the command
+`docker-compose build --build-arg deploy=<F> scanner`, (where F is the
+name of the folder created at step 2).
 
-In ordet to build `scanner` microservice running the analysis function of `DockerFinder`:
-```
-$ docker-compose build --build-arg  deploy=deploy-package-dockerfinder scanner
 
-```
-Deploy all the microservices:
-```
-$ docker-compose up
-```
 
-### Deploy DockerGraph
-The `deploy-package-dockergraph` in the `analysis` folder contains the analysis function of
-`DockerGraph`.
-
-How to build the `scanner` microservice running the analysis function of `DockerGraph`:
-```
-$ docker-compose build --build-arg  deploy=deploy-package-dockergraph scanner
-
-```
-
-Deploy all the microservices:
-```
-$ docker-compose up
-```
-
--------------------------------------------------------------------------------
-Language                     files          blank        comment           code
--------------------------------------------------------------------------------
-Python                          24            461            781           1338
-Markdown                         3            107              0            360
-YAML                             3             34             41            226
-JavaScript                       4             78            290            223
-Bourne Shell                     2             41             23            206
-JSON                             7              0              0             95
-Dockerfile                       1              6              4              8
--------------------------------------------------------------------------------
-SUM:                            44            727           1139           2456
+Two examples of analysers can be found in the  [examples](./data/examples/README.md) folder.
