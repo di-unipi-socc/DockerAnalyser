@@ -1,8 +1,8 @@
 #scanner image
 FROM python
 
-#  DEPLOY_PACKAGE_PATH: contains the path of the deploy folder (default deploy-package)
-ARG DEPLOY_PACKAGE_PATH=./deploy-package/
+#  DEPLOY_PACKAGE_PATH: contains the path of the deploy folder
+ARG DEPLOY_PACKAGE_PATH
 
 RUN mkdir /code
 
@@ -11,12 +11,11 @@ WORKDIR /code
 COPY  analysis/scanner/   /code
 RUN pip install  -r requirements.txt
 
-#COPY analysis/pyFinder/ /code
 
 RUN echo "Selected Deploy package: $DEPLOY_PACKAGE_PATH"
-COPY "$DEPLOY_PACKAGE_PATH" /code/scanner/scanner/deploy
+COPY "$DEPLOY_PACKAGE_PATH" /code/scanner/deploy
 
-RUN pip install -r /code/scanner/scanner/deploy/requirements.txt
+RUN pip install -r /code/scanner/deploy/requirements.txt
 
 ENTRYPOINT ["python","/code/entryScanner.py"]
 CMD ["--help"]

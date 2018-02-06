@@ -1,36 +1,74 @@
-The requirements are the following:
+## Examples of Docker image analysers
+The folder containes the **deploy packages** used to create different examples of Docker image analysers built with DockerAnalyser.
 
- - [**Docker engine >= 18.01.0-ce**](https://docs.docker.com/engine/installation/)
- - [**Docker Compose >= 1.12.0**](https://docs.docker.com/compose/install/)
 
- Two use cases are already available
- - `DockerGraph`: constructs a Knowledge base representing a directed graph of the dependencies among the repository name in Docker Hub.
- - `DockerFinder`: permits to search the images based on the software distribution that are supported (e.g., search the images that support `Python 2.7`)
+The guide assumes that the following requirements are installed in the system:
+ - [**Docker engine >= 18.01.0**](https://docs.docker.com/engine/installation/)
+ - [**Docker Compose >= 1.18.0**](https://docs.docker.com/compose/install/)
 
-### Deploy DockerFinder
-The `deploy-package-dockerfinder`  folder contains the analysis function of 'docker-finder'.
+## Use cases
+Two use cases are provided:
+- `DockerFinder`: analyses each image and extracts the software versions (e.g.,`Python 2.7`, `Java 1.8`) that an image supports.
 
-In ordet to build `scanner` microservice running the analysis function of `DockerFinder`:
-```
-$ docker-compose build --build-arg  deploy=deploy-package-dockerfinder scanner
+- `DockerGraph`: constructs a directed graph of images where the nodes are the repository names of images and a link from an image *s* to an image *p* is added if the image *p* is the parent image of *s*.
 
-```
-Deploy all the microservices:
-```
-$ docker-compose up
-```
 
-### Deploy DockerGraph
-The `deploy-package-dockergraph` in the `analysis` folder contains the analysis function of
-`DockerGraph`.
+### Build and run DockerFinder
+The `deploy-package-dockerfinder` folder contains the
+- `analysis.py` is the function used to extract the software version supported by an images.
+- `requirements.txt` file that contains the library dependencies of the analysis function.
+- `software.json` ia a JSON file tha contains the the list of the command to be searched in the image.
 
-How to build the `scanner` microservice running the analysis function of `DockerGraph`:
-```
-$ docker-compose build --build-arg  deploy=deploy-package-dockergraph scanner
+Steps for building and running DockerFinder:
 
-```
+  1. Clone the GitHUb repository of DockerAnalyser:
 
-Deploy all the microservices:
-```
-$ docker-compose up
-```
+  ```
+  git clone https://github.com/di-unipi-socc/DockerAnalyser.git && cd DockerAnalyser
+  ```
+  2. Build the **scanner** microservice specifying the *deploy-package** of DockerFinder:
+  ```
+  docker-compose build --build-arg  DEPLOY_PACKAGE_PATH=/data/examples/deploy-package-dockerfinder scanner
+
+  ```
+
+  3. Start the containers:
+  ```
+  docker-compose up -d
+  ```
+
+Check the running containers (using **portainer** third party tool)
+ - http://127.0.0.1:9000: Access the *portainer* web interface for cecking the running contianers.
+
+Monitor the Analyser:
+ - http://127.0.0.1:8082: RabbitMq web interface (User:`guest`, Password=`guest`)
+ - http://127.0.0.1:3000/api/images': APIs of the `ImagesService`.
+
+### Build and run DockerGraph
+The `deploy-package-dockergraph` folder contains the
+- `analysis.py` is the function used to get the *parent* image of another image by looking at the *FROM* instruction in the Dockerfile.
+- `requirements.txt` file that contains the library dependencies of the analysis function.
+
+Steps for building and running DockerFinder:
+
+  1. Clone the GitHUb repository of DockerAnalyser:
+
+  ```
+  git clone https://github.com/di-unipi-socc/DockerAnalyser.git && cd DockerAnalyser
+  ```
+  2. Build the **scanner** microservice specifying the *deploy-package** of DockerFinder:
+  ```
+  docker-compose build --build-arg  DEPLOY_PACKAGE_PATH=/data/examples/deploy-package-dockergraph scanner
+
+  ```
+
+  3. Start the containers:
+  ```
+  docker-compose up -d
+  ```
+Check the running containers (using **portainer** third party tool)
+ - http://127.0.0.1:9000: Access the *portainer* web interface for cecking the running contianers.
+
+Monitor the Analyser:
+ - http://127.0.0.1:8082: RabbitMq web interface (User:`guest`, Password=`guest`)
+ - http://127.0.0.1:3000/api/images': APIs of the `ImagesService`.

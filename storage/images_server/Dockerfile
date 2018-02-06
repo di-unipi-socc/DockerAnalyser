@@ -4,7 +4,7 @@ FROM node:alpine
 # Create  directory that store the source code
 RUN mkdir -p /code
 
-#install git because it is needed otinstall node-restful lates release
+#install git because it is needed otinstall node-restful latest release
 RUN apk add --update  git
 WORKDIR /code
 
@@ -13,6 +13,5 @@ COPY package.json /code
 RUN npm install -save
 
 COPY . /code
-
 
 ENTRYPOINT  ["npm","start"]
