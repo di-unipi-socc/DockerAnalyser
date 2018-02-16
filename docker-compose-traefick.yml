@@ -5,9 +5,10 @@ version: "3"
 #    3) storage services: images_server, images_db
 
 services:
+  ### reverse proxuy
   traefik:
     image: traefik
-    command: --web --docker --docker.domain=dockeranalyser.localhost --logLevel=DEBUG
+    command: --web --docker --docker.domain=${DOCKER_ANALYSER_NAME}.${DOCKER_ANALYSER_DOMAIN} --logLevel=DEBUG
     ports:
       - "80:80"
       - "8080:8080"
@@ -45,7 +46,7 @@ services:
     restart: on-failure:3
     labels:
       - traefik.backend=rabbitmq
-      - traefik.frontend.rule=Host:rabbitmq.${DOCKER_ANALYSER_NAME}.localhost
+      - traefik.frontend.rule=Host:rabbitmq.${DOCKER_ANALYSER_NAME}.${DOCKER_ANALYSER_DOMAIN} 
       - traefik.docker.network=proxy
       - traefik.port=15672
     volumes:
@@ -74,7 +75,7 @@ services:
       restart: on-failure:3
       labels:
         - traefik.backend=images_server
-        - traefik.frontend.rule=Host:images.${DOCKER_ANALYSER_NAME}.localhost
+        - traefik.frontend.rule=Host:images.${DOCKER_ANALYSER_NAME}.${DOCKER_ANALYSER_DOMAIN} 
         - traefik.docker.network=proxy
         - traefik.port=3000
       depends_on:
@@ -88,17 +89,6 @@ services:
         - traefik.enable=false
       volumes:
         -  images_db_volume:/data/db
-
-  ### third party service
-
-  # portainer:
-  #     image: portainer/portainer
-  #     restart: on-failure
-  #     ports:
-  #       - 9000:9000
-  #     volumes:
-  #       - /var/run/docker.sock:/var/run/docker.sock
-  #       - /opt/portainer:/data
 
 volumes:
   crawler_volume:
