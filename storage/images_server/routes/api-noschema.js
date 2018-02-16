@@ -30,20 +30,6 @@ Image.before('get', function (req, res, next) {
         }
       }
 
-     // build the query
-    //  var queryBuild = Image.find(findMatch); //{"description.size": {$eq: 45}});
-     //
-    //  //execution of the query
-    //   queryBuild.exec(function (err, results) {
-    //    if (err) {
-    //       console.log(err);
-    //       return next(err);
-    //     }
-    //     console.log("Results " + results.length);
-    //     res.json(results);
-    //     });
-
-
   // if images/:id call the next method for retrieving the single iamge by id
    if (req.params.id){
      next()
@@ -71,7 +57,7 @@ Image.before('get', function (req, res, next) {
                  "limit":result.limit,
                  "pages":result.pages,
                  "images": result.docs
-               });
+        });
        console.log("Total Results: " + result.total);
      });
 });
