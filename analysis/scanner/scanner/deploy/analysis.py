@@ -3,6 +3,7 @@ def analysis(image_json, context):
     client_images = context['images']
 
     logger.info("Received image from rabbitMQ: {}".format(image_json))
+    client_images.post_image(image_json)
     
     # image_json = {
     #       "name": "sameersbn/postgresql:9.4-17",
