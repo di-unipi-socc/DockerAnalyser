@@ -30,41 +30,37 @@ Image.before('get', function (req, res, next) {
         }
       }
 
-  // if images/:id call the next method for retrieving the single iamge by id
+  // if images/:id call the next method for retrieving the single image by id
    if (req.params.id){
      next()
      return
    }
 
    // pagination
-     var options = {
-         select: (req.query.select)?req.query.select: '',
-         sort: (req.query.sort)?req.query.sort: '',
-         //populate: 'author',
-         //lean: true,
-         page: (req.query.page)?Number(req.query.page): 1,
-         limit: (req.query.limit)?Number(req.query.limit): 20
-       };
+  var options = {
+       select: (req.query.select)?req.query.select: '',
+       sort: (req.query.sort)?req.query.sort: '',
+       page: (req.query.page)?Number(req.query.page): 1,
+       limit: (req.query.limit)?Number(req.query.limit): 20
+   };
 
-     Image.paginate(findMatch, options, function(err, result) {
-       if (err) {
-               console.log(err);
-               return next(err);
+  Image.paginate(findMatch, options, function(err, result) {
+     if (err) {
+             console.log(err);
+             return next(err);
       }
-      res.json( {
-                 "count": result.total,
-                 "page":result.page,
-                 "limit":result.limit,
-                 "pages":result.pages,
-                 "images": result.docs
-        });
-       console.log("Total Results: " + result.total);
-     });
+    res.json( {
+               "count": result.total,
+               "page":result.page,
+               "limit":result.limit,
+               "pages":result.pages,
+               "images": result.docs
+      });
+   console.log("Total Results: " + result.total);
+   });
 });
 
 Image.register(router,'/images');
-// Image.register(router,'/images');
-
 
 // Return router
 module.exports = router;

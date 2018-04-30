@@ -4,6 +4,8 @@ var express = require('express');
 var mongoose = require('mongoose');
 var bodyParser = require('body-parser');
 
+const querystring = require('querystring');
+
 var app = express();
 var readline = require('readline'); //read the input from the users
 var path = require('path');
@@ -58,7 +60,6 @@ var connectWithRetry = function() {
       }else{
       // Save database object from the callback for reuse.
       console.log("Succesful Connection to database "+ mongo_path );
-    //  load_images()
     }
   });
 };
@@ -69,15 +70,26 @@ connectWithRetry();
 //                                 ROUTES
 // ################################################################################
 
+function buildRedirect(req){
+  return "/images?"+querystring.stringify(req.query);
+}
 app.get('/', function (req, res) {
-    res.json({message: 'use /api/images'});
+    let  apiimages = buildRedirect(req)
+    console.log("redirect to "+ apiimages);
+    res.redirect(apiimages);
+});
+
+app.get('/api/images', function (req, res) {
+    let  apiimages = buildRedirect(req)
+    console.log("redirect to "+apiimages);
+    res.redirect(apiimages);
 });
 
 // /search paginated
-app.use('/search', require('./routes/search-paginated'))
+// app.use('/search', require('./routes/search-paginated'))
 
-// api/images: without scahema
-app.use('/api', require('./routes/api-noschema'));
+// /images endpoint
+app.use('/', require('./routes/api-noschema'));
 
 
 // development error handler will print stacktrace
