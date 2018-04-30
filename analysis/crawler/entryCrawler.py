@@ -40,6 +40,7 @@ if __name__ == '__main__':
     args = docopt(__doc__, version='Crawler 0.0.1')
 
     log_file_path = path.dirname(path.abspath(__file__))+ '/crawler/resources/logging.conf'
+    print(log_file_path)
     logging.config.fileConfig(log_file_path)
     logger = logging.getLogger()
     logger.info("Logging conf: "+ log_file_path)

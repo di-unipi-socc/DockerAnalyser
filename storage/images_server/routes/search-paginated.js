@@ -13,7 +13,9 @@ String.prototype.inList = function (list) {
 };
 
 //al the parameters that are note a binary versions
-var listParameters=['sort','select', 'limit', 'size', 'size_lt', 'size_gt', 'pulls', 'pulls_lt','pulls_gt', 'stars', 'stars_lt','stars_gt', 'page'];
+var listParameters=['sort','select', 'limit', 'size', 'size_lt', 'size_gt',
+                    'pulls', 'pulls_lt','pulls_gt', 'stars', 'stars_lt',
+                    'stars_gt', 'page'];
 
 // GET /search
 router.get('/', function (req, res, next) {

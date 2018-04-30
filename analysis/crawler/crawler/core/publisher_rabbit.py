@@ -237,7 +237,7 @@ class PublisherRabbit(object):
 
         for json_image in self.images_generator:
             self.publish_message(json_image)
-            self.logger.info('Publised message to rabbitMQ {}'.format(json_image))
+            self.logger.info('Published message to rabbitMQ {}'.format(json_image))
 
 
     def enable_delivery_confirmations(self):
@@ -302,15 +302,16 @@ class PublisherRabbit(object):
         properties = pika.BasicProperties(app_id='example-publisher',
                                           content_type='application/json',
                                           #headers=message,
-                                          delivery_mode=2) # DIDO make store to the disk
+                                          delivery_mode=2) # DIDO: 2 stores to the disk
 
+        self._channel.confirm_delivery() # DIDO: aggiunto per risolvere il problema di messageio non ricevuto nella coda
         self._channel.basic_publish(self.exchange, self.routing_key,
                                     #json.dumps(message, ensure_ascii=False),
                                     json_message,
                                     properties)
         self._message_number += 1
         self._deliveries.append(self._message_number)
-        self.logger.debug('Published message # %i', self._message_number)
+        self.logger.info('Published message # %i', self._message_number)
 
 
     def close_channel(self):
@@ -331,7 +332,7 @@ class PublisherRabbit(object):
         while True:
             try:
                 self._connection = self.connect()
-                self.logger.info('Succesful connection to %s', self._url)
+                self.logger.info('Succesful connection to: %s', self._url)
                 break
             except:
                 pass
