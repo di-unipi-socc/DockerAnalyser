@@ -22,11 +22,15 @@ class Scanner:
         self.logger = logging.getLogger(__class__.__name__)
         self.logger.info(__class__.__name__ + " logger  initialized")
 
-        #  rabbit consumer of RabbittMQ: receives the images name to scan,
+
+        # pika.exceptions.AMQPConnectionError
+
+        # rabbit consumer of RabbittMQ: receives the images name to scan,
         self.consumer = ConsumerRabbit(amqp_url=amqp_url, exchange=exchange,
                                        queue=queue, route_key=route_key,
                                        on_msg_callback=self.on_message_ctx)
-        # client of Images Service: GET;P OST; PUT; DELETE methods
+
+        # client of Images Service: GET(); POST(); PUT(); DELETE() methods
         self.client_images = ClientImages(images_url=images_url)
 
     def run(self):
