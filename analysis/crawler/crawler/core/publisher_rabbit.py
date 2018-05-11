@@ -239,7 +239,6 @@ class PublisherRabbit(object):
             self.publish_message(json_image)
             self.logger.info('Published message to rabbitMQ {}'.format(json_image))
 
-
     def enable_delivery_confirmations(self):
         """Send the Confirm.Select RPC method to RabbitMQ to enable delivery
         confirmations on the channel. The only way to turn this off is to close
