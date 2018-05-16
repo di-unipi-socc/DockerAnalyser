@@ -371,17 +371,3 @@ class ConsumerRabbit(object):
         """This method closes the connection to RabbitMQ."""
         self.logger.info('Closing connection')
         self._connection.close()
-
-# def main():
-#
-#     def fai(json_message):
-#         print("received"+str(json_message['name']))
-#
-#     example = ConsumerRabbit('amqp://guest:guest@180.0.0.8:5672', fai)
-#
-#     try:
-#         example.run()
-#     except KeyboardInterrupt:
-#         example.stop()
-# if __name__ == '__main__':
-#     main()

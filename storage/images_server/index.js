@@ -56,7 +56,6 @@ var connectWithRetry = function() {
       if (err) {
         console.error(err.message+ '- retrying in 5 sec' );
         setTimeout(connectWithRetry, 5000);
-
       }else{
       // Save database object from the callback for reuse.
       console.log("Succesful Connection to database "+ mongo_path );
@@ -70,27 +69,11 @@ connectWithRetry();
 //                                 ROUTES
 // ################################################################################
 
-function buildRedirect(req){
-  return "/images?"+querystring.stringify(req.query);
-}
-app.get('/', function (req, res) {
-    let  apiimages = buildRedirect(req)
-    console.log("redirect to "+ apiimages);
-    res.redirect(apiimages);
-});
-
-app.get('/api/images', function (req, res) {
-    let  apiimages = buildRedirect(req)
-    console.log("redirect to "+apiimages);
-    res.redirect(apiimages);
-});
-
 // /search paginated
 // app.use('/search', require('./routes/search-paginated'))
 
-// /images endpoint
+// /api/images
 app.use('/', require('./routes/api-noschema'));
-
 
 // development error handler will print stacktrace
 if (app.get('env') === 'development') {

@@ -30,7 +30,6 @@ services:
 
   rabbitmq:
     image: rabbitmq:3.7.3-management
-    # image: rabbitmq:3-management
     hostname: rabbitmq
     restart: on-failure:3
     ports:
