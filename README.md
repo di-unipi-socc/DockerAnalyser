@@ -1,14 +1,29 @@
-#  DockerAnalyser
+<p align="center">
+  <img src="data/docs/logo/docker-analyser-logo.png" width="250" />
+</p>
 
-[Department of Computer Science, University of Pisa](https://www.di.unipi.it/en/)
+-------
+`DockerAnalyser` is a microservice-based tool that permits building analysers of Docker images.
+> Author: Davide Neri. <br>
+> [Department of Computer Science, University of Pisa](https://www.di.unipi.it/en/)  <br>
+> Contact: davide.neri@di.unipi.it
 
-Author: Davide Neri.
+It was first presented in 
+> _A. Brogi, D. Neri, J. Soldani <br>
+> **A microservice‐based architecture for (customisable) analyses of Docker images.** <br>
+> Software: Practice and Experience, DOI: 10.1002/spe.2583. [In press]_ 
 
-Contact: davide.neri@di.unipi.it
-
-
-> `DockerAnalyser` is a microservice-based tool that permits building analysers of Docker images.
-
+If you wish to reuse the tool or the sources contained in this repository, please properly cite the above mentioned paper. Below you can find the BibTex reference:
+```
+@article{docker-analyser,
+   author = {Brogi Antonio and Neri Davide and Soldani Jacopo},
+   title = {A microservice‐based architecture for (customisable) analyses of Docker images},
+   journal = {Software: Practice and Experience},
+   doi = {10.1002/spe.2583},
+   url = {https://onlinelibrary.wiley.com/doi/abs/10.1002/spe.2583},
+   note = {{\em [In press]}}
+}
+```
 
 
 ## DockerAnalyser: high level overview
