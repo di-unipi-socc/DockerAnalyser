@@ -171,15 +171,11 @@ class Crawler:
                                                   filter_repo=self.filter_tosker):
             sent_images += 1
             if sent_images % 100 == 0:
-                self.logger.info(
-                    "{0} number of images sent to analyser".format(sent_images))
+                self.logger.info("{0} number of images sent to analyser".format(sent_images))
             yield json.dumps(image)
-
-            #self.logger.info("{0}/{1} (Current samples/Target samples)".format(str(sent_images), str(count)))
-            #self.logger.info("Number of images sent to queue: {0}".format(str(sent_images)))
-            #self.logger.info("{0}/{1} (Current samples/Target samples)".format(str(sent_images), str(count)))
         self.logger.info(
             "Total num of images sent to queue: {0}".format(sent_images))
+        return
 
     def filter_latest(self, image_with_tag):
         """

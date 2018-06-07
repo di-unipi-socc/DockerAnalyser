@@ -19,10 +19,10 @@ Options:
   --queue==QUEUE        Queue name of the rabbitMQ server       [default: images]
   --key=KEY             Routing key used by the rabbitMQ server [default: images.scan]
   --images-url=IMAGES_URL      The url of the images service    [default: http://127.0.0.1:3000/api/images]
-  --tag=TAG             TAG  of the image to scan                  [default: latest]
+  --tag=TAG             TAG  of the image to scan               [default: latest]
   --p=PROGRAM           The program name to pass to the container.
   --opt=OPTION          Option of the command to run in the contianer
-  --regex=REGEX          Regular expression used to extract info for PROGRAM OPTION
+  --regex=REGEX         Regular expression used to extract info for PROGRAM OPTION
   --version             Show version.
 """
 

@@ -4,7 +4,7 @@ import sys
 from .dfexception import *
 import logging
 from urllib.parse import urljoin
-# from .utils import string_to_date
+
 """ This module interacts with the *Images service* running on the *storage* part."""
 
 
@@ -153,15 +153,11 @@ class ClientImages:
             if res.status_code == 204:
                 self.logger.debug(
                     "DELETE [" + image_id + "] found within local database")
-                #print("Deleted ", image_id)
-                # return res.json()
             else:
                 self.logger.error(str(res.status_code) +
                                   " Error code. " + res.text)
-                #print(str(res.status_code) + " Error code. " + res.text)
         except requests.exceptions.ConnectionError as e:
             self.logger.exception("ConnectionError: ")
-            #print("ConnectionError: ")
         except:
             self.logger.exception("Unexpected error:")
             raise

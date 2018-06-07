@@ -8,14 +8,13 @@ Storage
 |
 |___images_server:
 |   |___models
-|   |   |___image.js: defines the model of an image's description
+|   |   |___image-noschema.js: defines the model of an image's description
 |   |___routes
-|        |___api.js : the RESTful  API for the mansing the images
-|        |___search.js: the search API for searching the images.
+|        |___api-noschema.js : the RESTful  API for the mansing the images
+|        |___search-paginated.js: the search API for searching the images.
 |
-|____imagesManager.py: python script for PULL, UPLOAD or RM the imagee stored into the db
-|
-|____images-13gen-12250.js: set of 12250 images already analysed by DockerFinder
+|____imagesManager.py: python script for DOWLAOD, UPLOAD or REMOVE the imagee stored into the database
+
 ```
 
 

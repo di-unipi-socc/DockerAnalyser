@@ -36,7 +36,7 @@ while page <= pages:
 
 images_graph["edges"] = images
 
-print("downloaed completed")
+print("Downloaed completed")
 with open(path_file_json, 'w') as f:
     json.dump(images_graph, f, ensure_ascii=False)
     print("Saved into {} ".format(path_file_json))

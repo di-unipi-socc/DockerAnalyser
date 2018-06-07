@@ -3,7 +3,8 @@
 MANAGER_NODE="node-1"
 DEPLOY_PACKAGE="deploy-package"
 STACK_NAME="docker-analyser"
-DOCKER_COMPOSE="docker-compose-myregistry.yml"
+DOCKER_COMPOSE="docker-compose-swarm.yml"
+# DOCKER_COMPOSE="docker-compose-myregistry.yml"
 
 function usage()
 {

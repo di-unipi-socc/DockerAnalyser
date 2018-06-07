@@ -5,7 +5,6 @@ version: "3"
 #    3) storage services: images_server, images_db
 
 services:
-
   ###############   ANALYSIS ####################
   crawler:
     image: diunipisocc/docker-finder:crawler
@@ -17,9 +16,9 @@ services:
                     '--images-url=http://images_server:3000/api/images/',
                     '--queue=images',
                     '--force-page=True',
-                    #'--si=10000',
-                    '--random=True',
-                    '--fp=1',
+                    '--si=20',
+                    '--random=False',
+                    '--fp=10',
                     '--ps=100',
                     '--policy=stars_first',
                     '--min-stars=3',
@@ -30,12 +29,11 @@ services:
           - crawler_volume:/data/crawler/
 
   rabbitmq:
-    image: rabbitmq:3-management
+    image: rabbitmq:3.7.3-management
     hostname: rabbitmq
     restart: on-failure:3
     ports:
       - 8082:15672
-      # - 5672:5672
     volumes:
       - rabbitmq_volume:/var/lib/rabbitmq
 
@@ -45,22 +43,23 @@ services:
       context: .
       dockerfile: analysis/Dockerfile_scanner
       args:
-        DEPLOY_PACKAGE_PATH: ./deploy-package
+        DEPLOY_PACKAGE_PATH:
     command: [run, '--images-url=http://images_server:3000/api/images/',
+                  '--amqp-url=amqp://guest:guest@rabbitmq:5672',
                   '--queue=images',
                   '--key=images.scan',
                   ]
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
 
-  # ###############   STORAGE ####################
+  ################   STORAGE ####################
   images_server:
-      build: storage/images_server
       image: diunipisocc/docker-finder:images_server
+      build: storage/images_server
       hostname: images_server
       restart: on-failure:3
       ports:
-        - "3000:3000" #3000
+        - "3000:3000"
       depends_on:
         - images_db
 
@@ -70,6 +69,17 @@ services:
       hostname: images_db
       volumes:
         -  images_db_volume:/data/db
+
+  ### third party service
+
+  portainer:
+      image: portainer/portainer
+      restart: on-failure
+      ports:
+        - 9000:9000
+      volumes:
+        - /var/run/docker.sock:/var/run/docker.sock
+        - /opt/portainer:/data
 
 volumes:
   crawler_volume:

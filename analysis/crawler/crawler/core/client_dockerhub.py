@@ -120,9 +120,7 @@ class ClientHub:
         #self.logger.debug("Total images into Docker Hub: " + str(max_images))
         try:
             while self.next_url and crawled_images < max_images: # max_images > 0
-
                 self.save_last_url(self.path_file_url, self.next_url) # save last url
-
                 self.logger.info("URL="+ self.next_url)
                 res = requests.get(self.next_url)
                 if res.status_code == requests.codes.ok:
@@ -133,20 +131,15 @@ class ClientHub:
                             for image_tag_filtered in self._apply_tag_filter(image, filter_tag=filter_tag): # apply the function on each tag of the image
                                 if image_tag_filtered is not None:
                                     temp_images +=1
+                                    crawled_images +=1
+                                    if crawled_images > max_images:
+                                        return
+                                        yield
                                     yield image_tag_filtered
-
                     self.next_url= json_response['next']
-                    #temp_images = len(list_json_image)
-                    if temp_images + crawled_images > max_images:
-                        self.logger.debug("Break yield images because {0}> {1}".format(temp_images + crawled_images,max_images))
+                    if  crawled_images > max_images:
+                        self.logger.debug("ATT3: Break yield images because {0}> {1}".format(temp_images + crawled_images,max_images))
                         break
-                    #if temp_images + crawled_images > max_images:
-                    #    list_json_image = list_json_image[:max_images-crawled_images]
-                    #crawled_images += temp_images
-                        #yield list_json_image
-                        # for image in list_json_image:
-                        #     yield image
-
                 else:
                     self.logger.error(str(res.status_code) + " Error response: " + res.text)
             else:

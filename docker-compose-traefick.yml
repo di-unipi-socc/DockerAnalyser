@@ -1,0 +1,96 @@
+version: "3"
+
+# The docker-compose.yml file defines DockerAnalyser Services
+#    1) analysis services: crawler, scanner, rabbitmq,
+#    3) storage services: images_server, images_db
+
+services:
+  ### reverse proxuy
+  traefik:
+    image: traefik
+    command: --web --docker --docker.domain=${DOCKER_ANALYSER_NAME}.${DOCKER_ANALYSER_DOMAIN} --logLevel=DEBUG
+    ports:
+      - "80:80"
+      - "8080:8080"
+      - "443:443"
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - /dev/null:/traefik.toml
+
+  ###############   ANALYSIS ####################
+  crawler:
+    image: diunipisocc/docker-finder:crawler
+    build:
+     context: analysis/
+     dockerfile: Dockerfile_crawler
+    command: [crawl,'--save-url=/data/crawler/lasturl.txt',
+                    '--amqp-url=amqp://guest:guest@rabbitmq:5672',
+                    '--images-url=http://images_server:3000/api/images/',
+                    '--queue=images',
+                    '--force-page=True',
+                    #'--si=10000',
+                    '--random=True',
+                    '--fp=1',
+                    '--ps=100',
+                    '--policy=stars_first',
+                    '--min-stars=3',
+                    '--min-pulls=0',
+                    #'--only-official',
+                    '--only-automated',]
+    volumes:
+          - crawler_volume:/data/crawler/
+
+  rabbitmq:
+    image: rabbitmq:3-management
+    hostname: rabbitmq
+    restart: on-failure:3
+    labels:
+      - traefik.backend=rabbitmq
+      - traefik.frontend.rule=Host:rabbitmq.${DOCKER_ANALYSER_NAME}.${DOCKER_ANALYSER_DOMAIN} 
+      - traefik.docker.network=proxy
+      - traefik.port=15672
+    volumes:
+      - rabbitmq_volume:/var/lib/rabbitmq
+
+  scanner:
+    image: diunipisocc/docker-finder:scanner
+    build:
+      context: .
+      dockerfile: analysis/Dockerfile_scanner
+      args:
+        DEPLOY_PACKAGE_PATH:
+    command: [run, '--images-url=http://images_server:3000/api/images/',
+                  '--amqp-url=amqp://guest:guest@rabbitmq:5672',
+                  '--queue=images',
+                  '--key=images.scan',
+                  ]
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+
+  ################   STORAGE ####################
+  images_server:
+      image: diunipisocc/docker-finder:images_server
+      build: storage/images_server
+      hostname: images_server
+      restart: on-failure:3
+      labels:
+        - traefik.backend=images_server
+        - traefik.frontend.rule=Host:images.${DOCKER_ANALYSER_NAME}.${DOCKER_ANALYSER_DOMAIN} 
+        - traefik.docker.network=proxy
+        - traefik.port=3000
+      depends_on:
+        - images_db
+
+  images_db:
+      image: mongo:3
+      restart: on-failure:3
+      hostname: images_db
+      labels:
+        - traefik.enable=false
+      volumes:
+        -  images_db_volume:/data/db
+
+volumes:
+  crawler_volume:
+  rabbitmq_volume:
+  images_db_volume:
