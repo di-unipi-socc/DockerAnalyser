@@ -13,7 +13,7 @@ services:
      dockerfile: Dockerfile_crawler
     command: [crawl,'--save-url=/data/crawler/lasturl.txt',
                     '--amqp-url=amqp://guest:guest@rabbitmq:5672',
-                    '--images-url=http://images_server:3000/api/images/',
+                    '--images-url=http://images_server:4000/api/images/',
                     '--queue=images',
                     '--force-page=True',
                     '--si=20',
@@ -44,7 +44,7 @@ services:
       dockerfile: analysis/Dockerfile_scanner
       args:
         DEPLOY_PACKAGE_PATH:
-    command: [run, '--images-url=http://images_server:3000/api/images/',
+    command: [run, '--images-url=http://images_server:4000/api/images/',
                   '--amqp-url=amqp://guest:guest@rabbitmq:5672',
                   '--queue=images',
                   '--key=images.scan',
@@ -58,8 +58,10 @@ services:
       build: storage/images_server
       hostname: images_server
       restart: on-failure:3
+      environment:
+        PORT: 4000
       ports:
-        - "3000:3000"
+        - "4000:4000"
       depends_on:
         - images_db
 
