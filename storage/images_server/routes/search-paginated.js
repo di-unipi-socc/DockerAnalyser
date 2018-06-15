@@ -6,31 +6,43 @@ var express = require('express');
 var router = express.Router();
 var Image = require('../models/image-noschema');
 
-
 //method for looking if a string is in a list
 String.prototype.inList = function (list) {
     return ( list.indexOf(this.toString()) != -1)
 };
 
-//al the parameters that are note a binary versions
-var listParameters=['sort','select', 'limit', 'size', 'size_lt', 'size_gt',
-                    'pulls', 'pulls_lt','pulls_gt', 'stars', 'stars_lt',
-                    'stars_gt', 'page'];
 
-// GET /search
+// convert a string parameter to boolean value
+function stringToIntegerOrBoolean(parameter){
+    var param = parameter.toLowerCase().trim();
+    if(!isNaN(param)){
+      console.log("retrn a number");
+      return +param;
+    }
+    switch(param){
+        case "true": return true;
+        case "false": case null: return false;
+        default: return param;
+    }
+}
+
+
+//all the parameters that are not Attribute of the description of an image
+var listParameters=['sort','select', 'limit', 'page',
+                    'size', 'size_lt', 'size_gt',
+                    'pulls', 'pulls_lt','pulls_gt',
+                    'stars', 'stars_lt','stars_gt'
+                  ];
+
+// GET /search?<ATTRIBUTE>=<VALUE>&sort=x&size_lt=y
 router.get('/', function (req, res, next) {
-
     console.log("GET " + req.originalUrl);
-
-    // query for retrieve the images with binary name and versions
-    var findMatch = {'softwares': {$all: []}};
-    var numberBins = 0;
-
-    for (var key in req.query) {
-        if(!key.inList(listParameters)) {  // get all the name and version parameters
+    var findMatch = {}; //{'softwares': {$all: []}};
+    for (var key in req.query) {  //
+        if(!key.inList(listParameters)) {  // check if the parameter is not in the reserved parameters
             //elementMatch = {$elemMatch: {bin: key, ver: {$regex: '^' + req.query[key]}}};
-            findMatch.softwares.$all.push({$elemMatch: {software: key, ver: {$regex: '^' + req.query[key]}}});
-            numberBins +=1;
+            // findMatch.softwares.$all.push({$elemMatch: {software: key, ver: {$regex: '^' + req.query[key]}}});
+            findMatch[key] = {$eq: stringToIntegerOrBoolean(req.query[key])}
             console.log("deleting : " + key +" "+ req.query[key])
             delete req.query.key;
         }
@@ -112,11 +124,6 @@ router.get('/', function (req, res, next) {
             sort =  ordering
             break;
       }
-      // if(req.query['select']) {
-      //     //queryBuild.where('pulls', req.query['pulls']);
-      //     findMatch.pulls = {$eq : req.query['pulls']}
-      //     console.log("Pulls equal" + req.query['pulls']);
-      // }
 
     var options = {
         select: (req.query.select)?req.query.select: '',
@@ -127,8 +134,7 @@ router.get('/', function (req, res, next) {
     Image.paginate(findMatch, options, function(err, result) {
       if (err) {
               console.log(err);
-              return next(err);
-            }
+              return next(err);}
       res.json({"count": result.total,
                 "page":result.page,
                 "limit":result.limit,
