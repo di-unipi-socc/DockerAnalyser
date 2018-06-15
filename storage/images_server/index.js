@@ -75,8 +75,8 @@ connectWithRetry();
 //                                 ROUTES
 // ################################################################################
 
-// /search paginated
-// app.use('/search', require('./routes/search-paginated'))
+// /search  endpoint with pagination
+app.use('/search', require('./routes/search-paginated'))
 
 // /api/images
 app.use('/', require('./routes/api-noschema'));
