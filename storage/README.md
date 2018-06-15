@@ -75,7 +75,7 @@ All the parameters of the `GET /api/images/` methods are shown in the table belo
 
 
 
-#### Adding new images
+#### Adding new image
 In order to add a new description of an image, the POST
 method is used.
 ```
@@ -124,16 +124,18 @@ DELETE /api/images/:id
 
 ## Search images
 The `/search` interface exposes the GET operation
-that permitslooking for (description of) images.
+that permits searching for images.
 
-The query syntax is a list of *PAR* and *VALUE* pair separated by *&*.
+THe endpoint is esposed at the `/search` endpoint..
+
+The query syntax is a list of *ATTRIBUTE* and *VALUE* pair separated by *&*.
 
 ```
-GET /search?<PAR>=<VALUE>[&<PAR>=<VALUE>]*
+GET /search?<ATTRIBUTE>=<VALUE>[&<ATTRIBBUTE>=<VALUE>]*
 ```
-The *PAR* can be:
-- a software distribution to search in the image (e.g., *python*),
-- any parameter namesdlisted in Table of the `GET /api/images`.
+The *ATTRIBUTE* can be:
+- any atribute appearing in the image json description (e.g., name),
+- any parameter names listed in Table of the `GET /api/images`.
 
 The *VALUE* depends on the PAR field.
 - If the *PAR* is a software, the VALUE is the version of the software to search, (e.g. *python=2.7*)
