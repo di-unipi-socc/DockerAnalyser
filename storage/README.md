@@ -75,7 +75,7 @@ All the parameters of the `GET /api/images/` methods are shown in the table belo
 
 
 
-#### Adding new images
+#### Adding new image
 In order to add a new description of an image, the POST
 method is used.
 ```
@@ -142,7 +142,7 @@ For example, if an user wants to retrieve all the images with *star_count=30* th
 ```
 GET /search?star_count=30
 
-// return all the images with the key="star_count" and value=30. 
+// return all the images with the key="star_count" and value=30.
 ```
 
 The response is a JSON of the form:
