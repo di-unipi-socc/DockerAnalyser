@@ -159,6 +159,22 @@ The response is a JSON of the form:
     ]  
 }
 ```
+
+
+
+## Statistics 
+The endpoint `/stats` offers the statistics of the keys in the description of the images.
+
+```
+GET /stats/<KEY>*
+
+{
+
+
+}
+```
+
+http://neri.di.unipi.it:4000/stats/star_count
 ### Filtering the results
 The results of a query cna be filterd
 
