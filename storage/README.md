@@ -162,19 +162,84 @@ The response is a JSON of the form:
 
 
 
-## Statistics 
+## Get statistics of keys 
 The endpoint `/stats` offers the statistics of the keys in the description of the images.
 
 ```
-GET /stats/<KEY>*
+GET /stats/<KEY>
 
-{
+{  
+   "_id":null,
+   "max": X,       //max value
+   "min": Y,
+   "avg": Z,
+   "count": W,
+   "key":"KEY",     //key name submitted
+   "values":[  
+      {  
+         "count": C,   / number of occurrencies of the key=value in the descriptins.
+         "value": V   // value of the key
+      },
+      ...
+   ]
+}
 
+```
 
+Example:  get the statistics of the  *star_count* key
+```
+http://neri.di.unipi.it:4000/stats/star_count
+
+{  
+   "_id":null,
+   "max":30,
+   "min":30,
+   "avg":30,
+   "count":223,
+   "key":"star_count",
+   "values":[  
+      {  
+         "count":223,
+         "value":30
+      }
+   ]
+}
+
+```
+
+Example: get statistics of (annidated keys) *softwares.python"
+
+```
+GET http://neri.di.unipi.it:4000/stats/softwares.python
+
+{  
+   "_id":null,
+   "max":"2.7.9",
+   "min":"2.7.12",
+   "avg":null,
+   "count":105,
+   "key":"softwares.python",
+   "values":[  
+      {  
+         "count":1,
+         "value":"2.7.13"
+      },
+      {  
+         "count":26,
+         "value":"2.7.6"
+      },
+      {  
+         "count":37,
+         "value":"2.7.9"
+      },
+      {  
+         "count":41,
+         "value":"2.7.12"
+      }
+   ]
 }
 ```
 
-http://neri.di.unipi.it:4000/stats/star_count
 ### Filtering the results
 The results of a query cna be filterd
 
