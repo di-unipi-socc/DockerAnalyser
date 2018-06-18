@@ -75,11 +75,14 @@ connectWithRetry();
 //                                 ROUTES
 // ################################################################################
 
+// /api/images
+app.use('/', require('./routes/api-noschema'));
+
 // /search  endpoint with pagination
 app.use('/search', require('./routes/search-paginated'))
 
-// /api/images
-app.use('/', require('./routes/api-noschema'));
+// /stats  endpoint with
+app.use('/stats', require('./routes/stats'))
 
 // development error handler will print stacktrace
 if (app.get('env') === 'development') {

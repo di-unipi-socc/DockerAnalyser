@@ -75,7 +75,7 @@ All the parameters of the `GET /api/images/` methods are shown in the table belo
 
 
 
-#### Adding new images
+#### Adding new image
 In order to add a new description of an image, the POST
 method is used.
 ```
@@ -85,7 +85,7 @@ The body of the request contains the JSON object of the image description
 to add. An example of a request it is shown below.
 
 ```
-POST / api / images
+POST /api/images
 {
     "name":"onepill/docker-openresty:latest",
     "description":"OpenResty version of https://hub.docker.com/r/kyma/docker-nginx/",
@@ -105,7 +105,7 @@ The body of the request contains the values of the image to update. In
 the example below only the *name* and description fields of the
 image with id 000011112222 are updated.
 ```
-PUT / api / images /000011112222
+PUT /api/images/000011112222
 {
   "name" : "repositoy/newname" ,
   "description" : "New description of the image"
@@ -123,28 +123,26 @@ DELETE /api/images/:id
 
 
 ## Search images
-The `/search` interface exposes the GET operation
-that permitslooking for (description of) images.
+The `/search` interface permits searching  for (description of) images.
 
-The query syntax is a list of *PAR* and *VALUE* pair separated by *&*.
-
-```
-GET /search?<PAR>=<VALUE>[&<PAR>=<VALUE>]*
-```
-The *PAR* can be:
-- a software distribution to search in the image (e.g., *python*),
-- any parameter namesdlisted in Table of the `GET /api/images`.
-
-The *VALUE* depends on the PAR field.
-- If the *PAR* is a software, the VALUE is the version of the software to search, (e.g. *python=2.7*)
-- otherwise it is the value associated with the query parameters shown Table of the `GET /api/images`.
-
-
-For example, if an user wants to retrieve all the images with *python 3.4*
-and *bash 4.3* installed, the query submitted can be the following:
+The query syntax is a list of *KEY* and *VALUE* pair separated by *&*.
 
 ```
-GET /search?python=3.4&bash=4.3
+GET /search?<KEY>=<VALUE>[&<KEY>=<VALUE>]*
+```
+Where:
+  - **KEY** can be any key attributes contained in  the JSON describing an image (e.g., *name*),
+Nested attribute must be separated with a point (e.g., software.java)
+
+- **VALUE** is the value of a particular KEY to be searched.
+
+
+For example, if an user wants to retrieve all the images with *star_count=30* the query to be submit is the following:
+
+```
+GET /search?star_count=30
+
+// return all the images with the key="star_count" and value=30.
 ```
 
 The response is a JSON of the form:
@@ -161,13 +159,14 @@ The response is a JSON of the form:
     ]  
 }
 ```
-### filter the results
+### Filtering the results
+The results of a query cna be filterd
 
 | Example             | Description                                                                                       |
 |-------------------------|---------------------------------------------------------------------------------------------------|
-| GET /search?page=<x>    | Returns the page number X            |
-| GET /search?limit=<Y>   | Limit as Y the number returned in a single page |
-| GET /search?sort=<pulls | -pulls | stars | -stars >   | Sorts the results by pull or stars |
+| GET /search?page=X    | Returns the page number X            |
+| GET /search?limit=Y   | Limit as Y the number returned in a single page |
+| GET /search?sort=pulls, -pulls, stars, -stars >   | Sorts the results by pull or stars |
 
 
 User can filter the results of the previous query example by adding
