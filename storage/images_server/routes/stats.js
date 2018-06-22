@@ -67,7 +67,7 @@ router.get('/:key', function (req, res, next) {
     var addKey = { $addFields: {"key":vkey}};
 
     keyMatch[vkey]  ={ "$exists": true, "$ne": null };
-    var matchNotNull = { $match: keyMatch};
+    var matchNotNull = {$match: keyMatch};
     var MaxMin ={ "$group" : {
                     _id: null,
                     max:{$max:key},
@@ -79,11 +79,28 @@ router.get('/:key', function (req, res, next) {
 
 
     Image.aggregate([matchNotNull, MaxMin, addKey], function(err, result1) {
-      Image.aggregate([matchNotNull, groupCount, { $addFields: { value: "$_id" }},{$project: { _id: 0 } }], function(err, result2) {
-            if (err) return next(err);
-            let data = result1[0];
-            data['values'] = result2;
-            res.json(data);
+          if (err) {
+                  console.log(err);
+                  return next(err);
+
+          }
+
+
+      Image.aggregate([matchNotNull, groupCount, { $addFields: { value: "$_id" }},{$project: { _id: 0 } }], function(err2, result2) {
+            if (err2) {
+                    console.log(err);
+                    return next(err);
+
+            }
+            if(result1 === undefined || result1.length == 0) {
+                // array empty or does not exist
+                res.json({"value":[], "msg":"No matching "+vkey+" keys found"});
+            }else{
+              let data = result1[0];
+              data['values'] = result2;
+              res.json(data);
+            }
+
       });
     });
 });
