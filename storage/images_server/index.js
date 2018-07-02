@@ -91,7 +91,8 @@ app.get('/api/images/drop', function (req, res, next) {
   })
 });
 
-var filename = "docker-analyser-images.json"
+var json_filename = "docker-analyser-images.json"
+
 app.get('/api/images/export', function (req, res, next) {
   Image.find().lean().exec(function (err, images) {
     if (err) {
@@ -99,8 +100,8 @@ app.get('/api/images/export', function (req, res, next) {
         return next(err);
     }
     res.statusCode = 200;
-    res.setHeader('Content-Type', 'text/csv');
-    res.setHeader("Content-Disposition", 'attachment; filename='+filename);
+    res.setHeader('Content-Type', 'application/json');
+    res.setHeader("Content-Disposition", 'attachment; filename='+json_filename);
     res.json(images)
   })
 });
