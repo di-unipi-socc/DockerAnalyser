@@ -1,10 +1,11 @@
 "use strict";
-
 var express = require('express');
 var mongoose = require('mongoose');
 var bodyParser = require('body-parser');
 
 const querystring = require('querystring');
+
+var Image = require('./models/image-noschema');
 
 var app = express();
 var readline = require('readline'); //read the input from the users
@@ -75,13 +76,44 @@ connectWithRetry();
 //                                 ROUTES
 // ################################################################################
 
+
+//
+app.get('/api/images/drop', function (req, res, next) {
+  Image.remove({}, function(err, obj) {
+    if (err) {
+        console.log(err);
+        return next(err);
+    }
+    res.json({
+          "err": 0,
+          "msg": obj.result.n + " images dropped."
+    })
+  })
+});
+
+app.get('/api/images/export', function (req, res, next) {
+  Image.find().lean().exec(function (err, images) {
+    if (err) {
+        console.log(err);
+        return next(err);
+    }
+
+    res.json({
+          "err": 0,
+          "msg":JSON.stringify(images)
+    })
+  })
+});
+
+
 // /api/images
 app.use('/', require('./routes/api-noschema'));
 
-// /search  endpoint with pagination
+
+// /search  endpoint with pagination, exach search match of images
 app.use('/search', require('./routes/search-paginated'))
 
-// /stats  endpoint with
+// /stats  endpoint with pagination, returns the statistics of the images
 app.use('/stats', require('./routes/stats'))
 
 // development error handler will print stacktrace
