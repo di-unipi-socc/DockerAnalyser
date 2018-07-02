@@ -85,17 +85,17 @@ app.get('/api/images/drop', function (req, res, next) {
   })
 });
 
+filename = "docker-analyser-images.json"
 app.get('/api/images/export', function (req, res, next) {
   Image.find().lean().exec(function (err, images) {
     if (err) {
         console.log(err);
         return next(err);
     }
-
-    res.json({
-          "err": 0,
-          "msg":JSON.stringify(images)
-    })
+    res.statusCode = 200;
+    res.setHeader('Content-Type', 'text/csv');
+    res.setHeader("Content-Disposition", 'attachment; filename='+filename);
+    res.json(images)
   })
 });
 
