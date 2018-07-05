@@ -167,7 +167,6 @@ def config(request):
                     service if service else "All the services"),
                 res))
 
-
 def logs(request):
     #mycompose = MyCompose(project_name=PROJECT_NAME,project_dir=settings.DOCKER_ANALYSER_DIR)
     # GET /logs?service=<SERVICE_NAME>
