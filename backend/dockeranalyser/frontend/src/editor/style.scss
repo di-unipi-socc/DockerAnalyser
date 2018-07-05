@@ -1,0 +1,36 @@
+
+.action_button {
+    margin-left: 10px;
+}
+
+#requirements_search_results {
+    margin: 0 auto;
+}
+
+#requirements_search_results td {
+    padding: 2px 10px;
+}
+
+.uploaded_editing {
+    font-weight: bold;
+}
+
+.side_section:first-child {
+    margin-top: 40px;
+}
+
+.side_section_actions {
+    text-align: left;
+}
+
+.side_section_actions .btn {
+    padding: 0.275rem 0.55rem;
+}
+
+#requirements_list .btn, #uploaded_list .btn {
+    border: none !important;
+}
+
+.form-inline input {
+    margin-right: 5px;
+}

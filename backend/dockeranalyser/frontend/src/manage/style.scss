@@ -1,0 +1,91 @@
+$service_width: 130px;
+$service_height: 90px;
+
+#dashboard_status {
+    margin-top: 30px;
+}
+
+#dashboard_status_icons {
+    text-align: center;
+    padding: 20px 0;
+}
+
+.service_container {
+    display: inline-block;
+    width: $service_width;
+    margin-left: 20px;
+    vertical-align: top;
+}
+
+.service_display {
+    display: inline-block;
+    width: $service_width;
+    height: $service_height;
+}
+
+.service_container .btn-outline-success:hover {
+    color: $green;
+}
+
+.service_container .btn-outline-danger:hover {
+    color: $red;
+}
+
+.service_display:hover {
+    background: white;
+    cursor: default !important;
+}
+
+.service_details {
+    width: $service_width;
+    text-align: left;
+    padding-top: 5px;
+    margin-top: 15px;
+    border-top: 1px dashed #999 !important;
+}
+
+.service_details i {
+    padding: 10px;
+    cursor: pointer;
+    color: #1d3e54;
+}
+
+.service_name {
+    margin: 25px auto 0;
+    text-align: center;
+}
+
+.service_action {
+    //color: white;
+    cursor: pointer;
+    display: inline-block;
+    margin: 5px auto 0;
+    padding: 15px 10px 0 0;
+}
+
+.service_stop:hover {
+    color: $red !important;
+}
+
+.service_start:hover {
+    color: $green !important;
+}
+
+.service_stop,
+.service_start {
+    float: right;
+}
+
+.service_down .service_stop,
+.service_up .service_start {
+    display: none;
+}
+
+.service_down .service_start,
+.service_up .service_stop {
+    display: inline;
+}
+
+#service_log {
+    font-size: 80%;
+}

@@ -2,9 +2,25 @@ version: "3"
 
 # The docker-compose.yml file defines DockerAnalyser Services
 #    1) analysis services: crawler, scanner, rabbitmq,
-#    3) storage services: images_server, images_db
+#    2) storage services: images_server, images_db
+#    3) DockerAnalyserUI
 
 services:
+  dashboard:
+    image: diunipisocc/docker-analyser:dashboard
+    build:
+      context: .
+      dockerfile: dockerfile_dashboard
+    #command: python3 backend/dockeranalyser/manage.py runserver 0.0.0.0:8000
+    command: python3 /my-analyser/backend/dockeranalyser/manage.py runserver 0.0.0.0:8000
+    ports:
+      - 8000:8000
+    volumes:
+        - /var/run/docker.sock:/var/run/docker.sock
+        - .:/my-analyser
+    # depends_on:
+    #   - db
+
   ###############   ANALYSIS ####################
   crawler:
     image: diunipisocc/docker-finder:crawler
@@ -16,7 +32,7 @@ services:
                     '--images-url=http://images_server:4000/api/images/',
                     '--queue=images',
                     '--force-page=True',
-                    '--si=20',
+                    '--si=50',
                     '--random=False',
                     '--fp=10',
                     '--ps=100',

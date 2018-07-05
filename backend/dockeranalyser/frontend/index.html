@@ -1,0 +1,306 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+  <title>DockerAnalyser</title>
+
+  <!-- Fonts -->
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Comfortaa:300,400" />
+  <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.1.0/css/all.css" crossorigin="anonymous" />
+
+  <script src="static/dist/bundle.js"></script>
+</head>
+
+<body>
+  <!-- Header -->
+  <div class="main-header">
+    <div class="container">
+      <div class="row">
+        <div class="col-12">
+          <img class="da_logo" src="static/imgs/da_logo.png" />
+          <img class="da_logo_txt" src="static/imgs/da_logo_txt.png" />
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div id="smartwizard">
+    <ul>
+      <li>
+        <a href="#step-edit">Edit
+          <br />
+          <small>Customize the analysis function</small>
+        </a>
+      </li>
+      <li>
+        <a href="#step-config">Config
+          <br />
+          <small>Customize the crawling options</small>
+        </a>
+      </li>
+      <li>
+        <a href="#step-manage">Manage
+          <br />
+          <small>Dashboard</small>
+        </a>
+      </li>
+      <li>
+        <a href="#step-visual">Visualize
+          <br />
+          <small>Explore the results through search &amp; charts</small>
+        </a>
+      </li>
+    </ul>
+
+    <div id="smartwizard_container">
+
+      <!-- =============== EDITOR =============== -->
+      <div class="container" id="step-edit">
+        <div class="row step_title">
+          <div class="col-12">
+            <h1>Editor</h1>
+            <div class="error-container"></div>
+          </div>
+        </div>
+        <div class="row step_content">
+          <div class="col-8">
+            <!-- Editor Tabs -->
+            <div class="edit_area_container">
+              <ul class="nav nav-tabs" id="file_list_tabs" role="tablist"></ul>
+              <div class="tab-content" id="file_list_tabs_content"></div>
+            </div>
+          </div>
+
+          <div class="col-4">
+            <!-- Requirements / Python Dependencies -->
+            <div class="side_section">
+              <h3>Python Dependencies</h3>
+              <div class="side_section_actions action_buttons">
+                <span id="requirements_actions"></span>
+                <button type="button" class="btn btn-outline-info" id="requirements_edit" data-toggle="button" aria-pressed="false">
+                  Show List
+                  <span class="badge badge-light" id="requirements_length">0</span>
+                </button>
+              </div>
+              <table class="table table-sm collapse" id="requirements_list"></table>
+            </div>
+            <br />
+
+            <!-- File Upload -->
+            <div class="side_section">
+              <h3>Additional Files
+                <!-- <a tabindex="0" class="badge badge-secondary btn" role="button" data-toggle="popover" data-trigger="focus" 
+            title="Additional Files" data-content="Additional Files Help Message"
+            >?</a> -->
+              </h3>
+              <div class="side_section_actions action_buttons">
+                <span id="uploads_actions"></span>
+                <button type="button" class="btn btn-outline-info" id="upload_edit" data-toggle="button" aria-pressed="false">
+                  Show List
+                  <span class="badge badge-light" id="uploads_length">0</span>
+                </button>
+
+              </div>
+              <table class="table table-sm collapse" id="uploaded_list"></table>
+            </div>
+            <br />
+
+            <!-- Package Manager -->
+            <div class="side_section">
+              <h3>Package</h3>
+              <div class="side_section_actions action_buttons" id="package_actions"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- =============== CONFIG =============== -->
+      <div class="container" id="step-config">
+        <div class="row step_title">
+          <div class="col-12">
+            <h1>Configurator</h1>
+            <div class="error-container"></div>
+          </div>
+        </div>
+        <div class="row step_content">
+          <div class="col-12 offset-sm-0">
+            <form name="config_form" id="config_form"></form>
+          </div>
+        </div>
+      </div>
+
+      <!-- =============== MANAGE =============== -->
+      <div class="container" id="step-manage">
+        <div class="row step_title">
+          <div class="col-12">
+            <h1>Dashboard</h1>
+            <div class="error-container"></div>
+          </div>
+        </div>
+        <div class="row step_content">
+          <div class="col-12 offset-sm-0">
+            <div id="manage_actions" class="action_buttons"></div>
+
+            <!-- Statistics -->
+            <h3>
+              <span id="num_images_dashboard">0</span> Images Analysed - 
+              <small>last refreshed on <span id="last_refresh_dashboard"></span></small>
+            </h3>
+            
+            <!-- Status -->
+            <div id="dashboard_status">
+              <h3>Service Status</h3>
+              <div id="dashboard_status_icons"></div>
+            </div>
+
+            <div id="dashboard"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- =============== RESULTS =============== -->
+      <div class="container" id="step-visual">
+        <div class="row">
+          <div class="col-12 step_title">
+            <h1>Results Explorer</h1>
+            <div class="error-container"></div>
+          </div>
+        </div>
+        <div class="row step_content">
+          <div class="col-12 offset-sm-0">
+
+            <!-- Possibilità di esportare i risultati in qualche formato, ad esempio: json, csv, xml 
+             Potrebbe anche farlo il backend e restituirmi il file pronto.
+             Export to CSV: https://www.npmjs.com/package/json2csv oppure https://www.papaparse.com/docs#json-to-csv -->
+              <!-- <button type="button" class="btn btn-info" id="set_endpoint" style="float: right">Set Endpoint</button> -->
+<!--              <div class="results-actions">
+              <button type="button" class="btn btn-info" id="refresh">
+                <i class="fas fa-sync"></i> Refresh
+              </button>
+              <button type="button" class="btn btn-info dropdown-toggle" id="export" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                <i class="fas fa-download"></i> Export
+              </button>
+              <div class="dropdown-menu export-dropdown-menu"></div>
+              <button type="button" class="btn btn-info" id="stop">
+                <i class="far fa-stop-circle"></i> Stop Analyser
+              </button>
+            </div>
+          -->
+
+            <!-- Results -->
+            <div id="results_not_ready">
+              The Image Server seeems to be unreachable.<br />
+              Check in the Manage section to make sure it is up or wait a few moments and try reloading the page.<br />
+              <br />
+              <button type="submit" class="btn btn-info" id="reload">Reload Page</button>
+            </div>
+            <div id="results_container">
+              <div id="results_actions" class="action_buttons"></div>
+              <!-- Header -->
+              <h2>
+                <span id="num_images">0</span> Images Analysed</h2>
+              <br />
+
+              <!-- Overview -->
+              <div id="results_overview" class="border rounded row no-gutters results_container_box">
+                <div class="col-6 border-right" id="stars_results" style="padding-left: 10px">
+                  <h3>Star Count</h3>
+                  <ul></ul>
+                </div>
+                <div class="col-6" id="pulls_results" style="padding-left: 20px">
+                  <h3>Pull Count</h3>
+                  <ul></ul>
+                </div>
+              </div>
+
+              <!-- Chart Builder -->
+              <div id="results_customize" class="border rounded results_container_box">
+                <h3>Chart Builder</h3>
+                <form name="add_chart" id="add_chart" class="form-inline"></form>
+              </div>
+
+              <div id="graph_container"></div>
+
+              <!-- Search Form -->
+              <div id="results_search_container" class="border rounded results_container_box">
+                <h3>Image Search</h3>
+
+                <fieldset>
+                  <legend>Create a custom search form</legend>
+                  <div id="search_actions" class="side_section_actions action_buttons" style="float: right"></div>
+
+                  <form class="form-inline" name="custom_search" id="custom_search">
+                    <div class="inline-form-group">
+                      <select class="custom-select" name="custom_search_select" id="custom_search_select"></select>
+                      <input type="text" class="form-control" name="custom_search_subfield" id="custom_search_subfield" placeholder="Sub Field" />
+                      <input type="submit" class="btn btn-info" value="+" id="custom_search_add" />
+                    </div>
+                  </form>
+
+                  <form class="form-inline" name="custom_search_free" id="custom_search_free">
+                    <div class="inline-form-group">
+                      <input type="text" class="form-control" name="add_custom_input" id="add_custom_input" placeholder="Custom Field" />
+                      <input type="submit" class="btn btn-info" value="+" id="custom_search_add_free" />
+                    </div>
+                  </form>
+                </fieldset>
+
+                <form name="results_search" id="results_search">
+                  <fieldset>
+                    <legend>Search within the analised images</legend>
+                  </fieldset>
+                  <input type="submit" class="btn btn-info" value="Search" id="results_search_button" />
+                </form>
+              </div>
+
+              <div id="results_list"></div>
+
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+
+  <!-- Footer -->
+  <div class="main-footer">
+    <div class="container">
+      <div class="row">
+        <div class="col-6">
+          <a href="https://di-unipi-socc.github.io/" target="_blank">
+            <img class="socc_logo" src="static/imgs/socc-logo.png" />
+          </a>
+          <div class="footer-content-left">
+            <a href="https://di-unipi-socc.github.io/" target="_blank">Service-Oriented, Cloud and Fog Computing Research Group</a>
+            <br />
+            <!-- <a href="https://di-unipi-socc.github.io/" target="_blank"><i class="fas fa-globe-africa"></i> Website</a><br /> -->
+            <i class="fab fa-github"></i>
+            <a href="https://github.com/di-unipi-socc" target="_blank">GitHub</a> -
+            <i class="fab fa-youtube"></i>
+            <a href="https://www.youtube.com/channel/UC6Kzupom8lpBc7dO-wcXp_g" target="_blank">YouTube</a>
+            <br />
+          </div>
+        </div>
+        <div class="col-6">
+          <a href="https://www.unipi.it" target="_blank">
+            <img class="unipi_logo" src="static/imgs/unipi-logo.png" />
+          </a>
+          <div class="footer-content-right">
+            <a href="https://www.di.unipi.it" target="_blank">Department of Computer Science</a>
+            <br />
+            <a href="https://www.unipi.it" target="_blank">University of Pisa</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Loader Overlay -->
+  <div class="loading_img"></div>
+</body>
+
+</html>
