@@ -1,0 +1,276 @@
+/* GLOBAL STYLES - Section styles included at the end */
+
+/* VARIABLES */
+
+$main-color: #1d3e54;
+$secondary-color: #0084af;
+$tab-border-color: #dee2e6;
+
+$info-color:#17a2b8;
+$secondary-dark: darken($secondary-color, 10%);
+$yellow: #FFF9BE;
+$popover-bg: lighten($yellow, 8%);
+
+$red: #dc3545;
+$green: #218838;
+
+$docker-font: 'Comfortaa', cursive;  // included in index.html via Google Fonts
+
+$logo-height: 90px;
+$editor-height: 600px;
+
+/* STEPS */
+
+.sw-theme-dots > ul.step-anchor > li.active > a {
+    color: $secondary-dark;
+}
+
+.sw-theme-dots > ul.step-anchor > li > a::before {
+    left: 40.5%;
+    color: $info-color;
+}
+
+.sw-theme-dots > ul.step-anchor > li.done > a {
+    color: $secondary-dark;
+    opacity: 0.6;
+}
+
+.sw-theme-dots > ul.step-anchor > li.done > a::after {
+    background: $secondary-dark;
+}
+
+.step-anchor .nav-item {
+    margin: 0 auto;
+}
+
+.step-content {
+    margin: 0 auto !important;
+    height: auto !important;
+}
+
+.sw-toolbar .btn-secondary {
+    color: #fff;
+    background-color: $secondary-dark;
+    border-color: $secondary-dark;
+}
+
+.sw-toolbar .btn-secondary:hover {
+    background-color: $info-color;
+    border-color: $secondary-dark;
+}
+
+.sw-toolbar .btn-secondary.disabled, .sw-toolbar .btn-secondary:disabled, 
+.sw-toolbar .btn-secondary.disabled:hover, .sw-toolbar .btn-secondary:disabled:hover {
+    color: #fff;
+    background-color: $main-color;
+    border-color: $main-color;
+}
+
+.sw-theme-dots .step-content {
+    background-color: transparent;
+}
+
+/* BUTTONS */
+
+.btn-outline-info {
+    color: $secondary-color;
+    border-color: $secondary-color;
+}
+
+/* ACTION BUTTONS */
+
+.action_buttons {
+    text-align: right;
+}
+
+.action_buttons .btn {
+    margin: 0.2rem 0.4rem 0.2rem 0;
+}
+
+/* POPOVERS */
+
+.popover-body {
+    background: $popover-bg !important;
+}
+
+.bs-popover-top .arrow::after {
+    border-top-color: $popover-bg !important;
+}
+
+.bs-popover-right .arrow::after {
+    border-right-color: $popover-bg !important;
+}
+
+.bs-popover-bottom .arrow::after {
+    border-bottom-color: $popover-bg !important;
+}
+
+.bs-popover-left .arrow::after {
+    border-left-color: $popover-bg !important;
+}
+
+/* TITLES */
+
+h1 {
+    margin-bottom: 1.5rem;
+}
+
+h1, h2, h3, h4 {
+    color: $main-color;
+    font-family: $docker-font;
+    font-variant: small-caps;
+}
+
+.h3, h3 {
+    font-size: 1.5rem;
+}
+
+.da_logo {
+    height: $logo-height;
+}
+
+.da_logo_txt {
+    height: $logo-height / 2;
+    margin-left: 10px;
+    margin-top: 10px;
+}
+
+.main-header {
+    background-image: radial-gradient(circle, lighten($tab-border-color, 10%) 0, $tab-border-color 100%);
+    border-bottom: 1px solid $tab-border-color;
+    margin-bottom: 20px;
+    padding: 20px 0;
+    width: 100%;
+}
+
+.main-footer {
+    background-color: $tab-border-color;
+    color: #333;
+    padding: 20px;
+    text-align: left;
+    width: 100%;
+    line-height: 1.6rem;
+}
+
+.footer-content-left, 
+.footer-content-right {
+    display: inline-block;
+    vertical-align: middle;
+    font-size: 0.9rem;
+}
+
+.footer-content-right {
+    float: right;
+    text-align: right;
+}
+
+.main-footer .socc_logo {
+    height: 50px;
+    margin-right: 10px;
+    display: inline-block;
+    vertical-align: middle;
+}
+
+.main-footer .unipi_logo {
+    height: 50px;
+    margin-left: 10px;
+    float: right;
+    vertical-align: middle;
+}
+
+.main-footer a {
+    color: $main-color;
+    text-decoration: none;
+    font-weight: bold;
+}
+
+.main-footer a:hover {
+    color: lighten($main-color, 20%);
+}
+
+.ace_editor { 
+    position: absolute;
+    width: 100%;
+    height: 80%;
+    border: 1px solid;
+    border-color: transparent $tab-border-color $tab-border-color;
+}
+
+.edit_area_container, .tab-content, .tab-pane {
+    position: relative;
+    display: block;
+    height: $editor-height;
+}
+
+.export_form_container {
+    position: relative;
+    display: block;
+}
+
+.loading_img {
+    display: none;
+    position: fixed;
+    z-index: 2000;
+    top: 0;
+    left: 0;
+    height: 100%;
+    width: 100%;
+    background: rgba(255, 255, 255, .8) url("../../static/imgs/loader.gif") 50% 50% no-repeat;
+}
+
+body.loading .loading_img {
+    display: block;
+    overflow: hidden;
+}
+
+.table {
+    margin-top: 10px;
+}
+
+.table td {
+    border-top: 1px dashed #dee2e6;
+}
+
+.table tr:first-child td {
+    border-top: none;
+}
+
+.table-sm th, .table-sm td {
+    padding: 0.2rem;
+}
+
+.capitalize {
+    text-transform: capitalize;
+}
+
+/* ERRORS */
+
+.alert {
+    padding: .5rem 1rem;
+}
+
+.alert-dismissible .close {
+    padding: .5rem 1rem;
+}
+
+.modal h5 .help_icon {
+    font-size: 80%;
+    margin-left: 10px;
+}
+
+.help_icon {
+    color: darken($secondary-color, 5%);
+}
+
+.help_icon:hover {
+    cursor: pointer;
+}
+
+#confirm_button {
+    margin-right: 10px;
+}
+
+@import "../editor/style";
+@import "../configurator/style";
+@import "../manage/style";
+@import "../results/style";
