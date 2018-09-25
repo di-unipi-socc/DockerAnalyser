@@ -5,6 +5,7 @@ venv3/
 markdown-themeable-pdf-headerFooter/
 .idea/
 *.test
+media/
 
 ########################################################
 ##		Python gitignore
