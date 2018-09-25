@@ -103,6 +103,14 @@ Collect the frontend static files:
 python manage.py collectstatic --noinput
 ```
 
+Enter in the frontend folder and compile the javscript file
+
+```sh
+cd frontend
+npm install
+npm run build
+```
+
 Start Django:
 ```sh
 python manage.py runserver 0.0.0.0:8000

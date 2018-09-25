@@ -14,7 +14,7 @@ def analysis(image_json, context):
     try:
         image = client_docker.images.pull(images_json['name']) # images_json['repo_name'], tag=images_json['tag'])
         container = client_docker.containers.create(images_json['name'],
-                                                    entrypoint="sleep  infinity")
+                                                    entrypoint="sleep  10000")
         container.start()
         softwares = {}
         with open(os.path.join(
@@ -33,6 +33,7 @@ def analysis(image_json, context):
         logger.info('[' + ''.join('{} {},'.format(s, v)
                                   for s, v in softwares.items()) + "]")
         images_json['softwares'] = softwares
+        images_json['last_scan'] = str(datetime.datetime.now())
         client_images.post_image(images_json)
         logger.debug("[{0}] inserted into images".format(sw['name']))
         container.stop(timeout=2)

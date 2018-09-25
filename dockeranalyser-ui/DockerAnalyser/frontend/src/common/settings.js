@@ -6,13 +6,13 @@
 
 /**
  * Backend base url.
- * @type {string} 
+ * @type {string}
  */
-var backend_url = "http://localhost:8000";
+var backend_url = "";http://localhost:8000";
 
 /**
  * URLs of backend services.
- * @type {Object} 
+ * @type {Object}
  */
 var urls = {
     requirements: backend_url + "/requirements/search",
@@ -28,8 +28,8 @@ var urls = {
         export: backend_url + "/images/export",
     },
     compose: {
-        upload: backend_url + "/compose/upload", 
-        build: backend_url + "/compose/build", 
+        upload: backend_url + "/compose/upload",
+        build: backend_url + "/compose/build",
         config: backend_url + "/compose/config",
         up: backend_url + "/compose/up",
         scale: backend_url + "/compose/up",
@@ -50,7 +50,7 @@ var vars = {
 
 /**
  * Error and Info messages.
- * @type {Object} 
+ * @type {Object}
  */
 var msgs = {
     error_generic: "An error occurred",
@@ -75,7 +75,7 @@ var msgs = {
 
 /**
  * Help messages.
- * @type {Object} 
+ * @type {Object}
  */
 var help = {
     requirements: "Search libraries you need to import",

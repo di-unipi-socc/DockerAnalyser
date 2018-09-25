@@ -2,6 +2,7 @@ import json
 import docker
 import re
 import os
+import datetime
 
 client_docker= docker.DockerClient(base_url="unix://var/run/docker.sock")
 
@@ -33,6 +34,7 @@ def analysis(images_json, context):
         logger.info('[' + ''.join('{} {},'.format(s, v)
                                   for s, v in softwares.items()) + "]")
         images_json['softwares'] = softwares
+        images_json['last_scan'] = str(datetime.datetime.now())
         client_images.post_image(images_json)
         logger.debug("[{0}] inserted into images".format(sw['name']))
         container.stop(timeout=2)
