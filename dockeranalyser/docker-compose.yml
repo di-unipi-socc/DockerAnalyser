@@ -3,8 +3,8 @@ services:
         build: {context: analysis/, dockerfile: Dockerfile_crawler}
         command: [crawl, --save-url=/data/crawler/lasturl.txt, '--amqp-url=amqp://guest:guest@rabbitmq:5672',
             '--images-url=http://images_server:4000/api/images/', --queue=images,
-            --si=10000, --fp=1, --ps=100, --policy=stars_first, --min-stars=3, --min-pulls=0,
-            --random=False, --only-automated]
+            --random=False, --fp=1, --si=100000, --min-stars=3, --policy=stars_first,
+            --min-pulls=0, --ps=100, --only-automated]
         image: diunipisocc/docker-finder:crawler
         volumes: ['crawler_volume:/data/crawler/']
     images_db:

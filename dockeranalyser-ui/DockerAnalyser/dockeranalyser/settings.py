@@ -25,7 +25,7 @@ SECRET_KEY = '!%i*t-1p(@y5=7m&^x31c7l@ze^j1s)gvl8=%%7rd@_(06ic8('
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['127.0.0.1','localhost']
+ALLOWED_HOSTS = ['neri.di.unipi.it','127.0.0.1','localhost']
 
 
 # Application definition
