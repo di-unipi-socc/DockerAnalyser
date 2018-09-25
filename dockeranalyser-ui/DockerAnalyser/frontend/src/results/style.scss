@@ -1,0 +1,132 @@
+/* RESULTS STYLES */
+
+$subdict_space: 20px;
+
+#results_not_ready {
+    display: none;
+}
+
+#results_list .card {
+    margin-bottom: 2px;
+}
+
+#results_list .card-header {
+    padding: .1rem;
+    border: none;
+    background-color: lighten($tab-border-color, 7%);
+}
+
+.reduce_button[aria-expanded="false"] i.fa-window-minimize,
+.reduce_button[aria-expanded="true"] i.fa-window-maximize, {
+    display: none;
+}
+
+.reduce_button[aria-expanded="true"] i.fa-window-minimize,
+.reduce_button[aria-expanded="false"] i.fa-window-maximize, {
+    display: inline;
+}
+
+.image-id[aria-expanded="false"] i.fa-caret-down,
+.image-id[aria-expanded="true"] i.fa-caret-right, {
+    display: none;
+}
+
+.image-id[aria-expanded="true"] i.fa-caret-down,
+.image-id[aria-expanded="false"] i.fa-caret-right, {
+    display: inline;
+}
+
+.space {
+    width: $subdict_space;
+    display: inline-block;
+}
+
+.graph_container {
+    display: inline-block;
+    width: 600px;
+}
+
+.chartjs-size-monitor, .chartjs-render-monitor {
+    display: inline-block !important;
+}
+
+label.capitalize {
+    padding-left: 10px !important;
+    font-size: 0.9rem;
+}
+
+.colon::after {
+    content: ":";
+}
+
+.checkbox-container {
+    text-align: center;
+}
+
+.results-actions {
+    text-align: right;
+}
+
+.results-actions button {
+    margin: 0 0 10px 0;
+}
+
+.results_container_box {
+    padding: 10px;
+    margin-bottom: 20px;
+}
+
+.form-inline select {
+    margin-right: 10px;
+}
+
+#graph_container .card {
+    margin-bottom: 20px;
+}
+
+.reduce_button {
+    margin-right: 10px;
+    font-size: 1.2rem;
+    padding-top: 5px !important;
+}
+
+.inline-form-group {
+    display: block;
+    width: 100%;
+    margin: 0 0 10px;
+}
+
+.inline-form-group input {
+    margin-right: 10px;
+}
+
+#custom_search select,
+#custom_search input[type="text"],
+#custom_search_free input[type="text"] {
+    width: 250px;
+}
+
+#results_search .form-check {
+    display: flex;
+    padding-left: 1.8rem;
+}
+
+.current_page {
+    font-weight: bold;
+}
+
+/* PAGINATION */
+
+@import "pagination";
+
+#pagination_container {
+    text-align: center;
+    margin-top: 10px;
+}
+
+.paginationjs {
+    width: auto;
+    text-align: center;
+    margin: 0 auto;
+    display: inline-block;
+}
