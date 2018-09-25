@@ -82,9 +82,8 @@ cd dockeranalyser-ui
 
 Create and activate virtualenv:
 ```sh
-virtualenv -p python3 dockeranalyser-ui
-cd dockeranalyser-ui
-source bin/activate
+virtualenv -p python3 venv
+source venv/bin/activate
 ```
 
 Install dependecies:
@@ -106,7 +105,8 @@ python manage.py collectstatic --noinput
 
 Start Django:
 ```sh
-python manage.py runserver
+python manage.py runserver 0.0.0.0:8000
+
 ```
 
 Dockeranalyser-ui is running on  http://localhost:8000
