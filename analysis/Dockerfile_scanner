@@ -1,5 +1,5 @@
 #scanner image
-FROM python
+FROM  python:3.6.6
 
 #  DEPLOY_PACKAGE_PATH: contains the path of the deploy folder
 ARG DEPLOY_PACKAGE_PATH
