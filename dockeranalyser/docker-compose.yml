@@ -1,0 +1,44 @@
+services:
+    crawler:
+        build: {context: analysis/, dockerfile: Dockerfile_crawler}
+        command: [crawl, --save-url=/data/crawler/lasturl.txt, '--amqp-url=amqp://guest:guest@rabbitmq:5672',
+            '--images-url=http://images_server:4000/api/images/', --queue=images,
+            --si=20, --fp=10, --ps=100, --policy=stars_first, --min-stars=3, --min-pulls=0,
+            --random=False, --only-automated]
+        image: diunipisocc/docker-finder:crawler
+        volumes: ['crawler_volume:/data/crawler/']
+    images_db:
+        hostname: images_db
+        image: mongo:3
+        restart: on-failure:3
+        volumes: ['images_db_volume:/data/db']
+    images_server:
+        build: storage/images_server
+        depends_on: [images_db]
+        environment: {PORT: 4000}
+        hostname: images_server
+        image: diunipisocc/docker-finder:images_server
+        ports: ['4000:4000']
+        restart: on-failure:3
+    portainer:
+        image: portainer/portainer
+        ports: ['9000:9000']
+        restart: on-failure
+        volumes: ['/var/run/docker.sock:/var/run/docker.sock', '/opt/portainer:/data']
+    rabbitmq:
+        hostname: rabbitmq
+        image: rabbitmq:3.7.3-management
+        ports: ['8082:15672']
+        restart: on-failure:3
+        volumes: ['rabbitmq_volume:/var/lib/rabbitmq']
+    scanner:
+        build:
+            args: {DEPLOY_PACKAGE_PATH: null}
+            context: .
+            dockerfile: analysis/Dockerfile_scanner
+        command: [run, '--images-url=http://images_server:4000/api/images/', '--amqp-url=amqp://guest:guest@rabbitmq:5672',
+            --queue=images, --key=images.scan]
+        image: diunipisocc/docker-finder:scanner
+        volumes: ['/var/run/docker.sock:/var/run/docker.sock']
+version: '3'
+volumes: {crawler_volume: null, images_db_volume: null, rabbitmq_volume: null}
