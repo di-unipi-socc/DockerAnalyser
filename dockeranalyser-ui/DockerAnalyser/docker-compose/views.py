@@ -69,7 +69,7 @@ def build(request):
         try:
             mycompose.build() # build the services aprt scanner
             deploy_package = get_latest_uploaded_deploy_package()
-            path = os.path.join(settings.DOCKER_ANALYSER_RELATIVE_PATH_DEPLOY_PACKAGE,deploy_package)
+            path = os.path.join(settings.MEDIA_ROOT,deploy_package)
             res = mycompose.build_scanner(scanner_name="scanner",path_deploypackage=path)
             msg = utils.success_msg("{} DockerAnalyser built succesfuly. Selected deploy package: {}"
                                     .format(mycompose.get_name(),deploy_package))
@@ -220,10 +220,10 @@ def get_zip_deploy_package():
         name_deploy_package = get_latest_uploaded_deploy_package()
     else:
         name_deploy_package = settings.DEFAULT_DEPLOY_PACKAGE
-        shutil.copytree(os.path.join(settings.DOCKER_ANALYSER_EXAMPLES,settings.DEFAULT_DEPLOY_PACKAGE),
-                        os.path.join(settings.MEDIA_ROOT,settings.DEFAULT_DEPLOY_PACKAGE))
-        shutil.copytree(os.path.join(settings.DOCKER_ANALYSER_EXAMPLES,settings.DEFAULT_DEPLOY_PACKAGE),
-                        os.path.join(settings.DOCKER_ANALYSER_PATH_DEPLOY_PACKAGE,settings.DEFAULT_DEPLOY_PACKAGE))
+
+        # copy the deploy package from examples folder in DockerAnalyser to server MEDIA folder
+        shutil.copytree(os.path.join(settings.DOCKER_ANALYSER_EXAMPLES,name_deploy_package),
+                        os.path.join(settings.MEDIA_ROOT,name_deploy_package))
     file_path = os.path.join(settings.MEDIA_ROOT,name_deploy_package)
     path_to_zip = make_archive(file_path, "zip", file_path)
     return path_to_zip
@@ -242,12 +242,6 @@ def get_latest_uploaded_deploy_package():
 
 def handle_uploaded_deploy_package(uploaded_file):
     date_upload = datetime.datetime.now().strftime("%Y-%m-%d_%H:%M:%S")
-    # copy to /data/examples in DockerAnalyser
-    # TODO: remove this copy when UI is inserted into DockerAnalyser because
-    # the scanner will be built by looking in the media folder directly.
-    path = os.path.join(settings.DOCKER_ANALYSER_PATH_DEPLOY_PACKAGE) #,date_upload+settings.UPLOADED_DEPLOY_PACKAGE)
-    files_extracted = _extract_zip_file(uploaded_file,path_folder=path)
-    # copy to /media
-    path_media = os.path.join(settings.MEDIA_ROOT)#,date_upload+settings.UPLOADED_DEPLOY_PACKAGE)
-    files_extracted = _extract_zip_file(uploaded_file,path_folder=path_media)
+    # path_media = os.path.join(settings.MEDIA_ROOT)#,date_upload+settings.UPLOADED_DEPLOY_PACKAGE)
+    files_extracted = _extract_zip_file(uploaded_file,path_folder=settings.MEDIA_ROOT)
     return files_extracted

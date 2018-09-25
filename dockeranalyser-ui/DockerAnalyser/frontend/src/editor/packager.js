@@ -55,8 +55,8 @@ var actions = [{
 ];
 
 /**
- * Checks if the analysis.py source code is valid. 
- * If an error is found, it will display an error message, otherwise 
+ * Checks if the analysis.py source code is valid.
+ * If an error is found, it will display an error message, otherwise
  * it will execute the callback provided.
  * @param {string} content the python source code
  * @param {function} callback the function called if the validation is successful
@@ -97,6 +97,7 @@ var reset = function() {
  */
 var create_zip = function(callback, error_callback) {
     let zip = new JSZip();
+
     let zip_name = config.vars.base_zip_name + utilities.normalise($("#"+config.selectors.export_name).val());
     let folder = zip.folder(zip_name);
     let files = model.get_items();
@@ -167,7 +168,7 @@ var upload_package = function() {
         moda.error(config.selectors.uploads_modal, settings.msgs.error_wrong_type);
         return;
     }
-    var zipname = uploaded_file.name; 
+    var zipname = uploaded_file.name;
     var reader = new FileReader();
 
     reader.onload = (function(current_file) {
@@ -197,7 +198,7 @@ var get_package = function() {
         if (disposition && disposition.indexOf('attachment') !== -1) {
             var filenameRegex = /filename[^;=\n]*=((['"]).*?\2|[^;\n]*)/;
             var matches = filenameRegex.exec(disposition);
-            if (matches != null && matches[1]) 
+            if (matches != null && matches[1])
                 filename = matches[1].replace(/['"]/g, '');
             console.log("filename", filename);
         }*/
