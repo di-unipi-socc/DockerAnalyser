@@ -120,7 +120,7 @@ def config(request):
        #  }
     if request.method == 'POST':
         if request.body:
-            body = json.loads(request.body)
+            body = json.loads(request.body.decode('utf-8'))
             service = body['service']
             command = body['command']
             user_args = body['args']
