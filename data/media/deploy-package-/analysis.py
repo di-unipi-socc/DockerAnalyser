@@ -5,7 +5,7 @@ import os
 
 client_docker= docker.DockerClient(base_url="unix://var/run/docker.sock")
 
-def analysis(images_json, context):
+def analysis(image_json, context):
     logger = context['logger']
     client_images = context['images']
 
@@ -14,7 +14,7 @@ def analysis(images_json, context):
     try:
         image = client_docker.images.pull(images_json['name']) # images_json['repo_name'], tag=images_json['tag'])
         container = client_docker.containers.create(images_json['name'],
-                                                    entrypoint="sleep  10000000")
+                                                    entrypoint="sleep  infinity")
         container.start()
         softwares = {}
         with open(os.path.join(
