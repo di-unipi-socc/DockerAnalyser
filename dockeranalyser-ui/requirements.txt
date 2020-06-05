@@ -2,7 +2,7 @@ cached-property==1.4.2
 certifi==2018.4.16
 chardet==3.0.4
 distlib==0.2.7
-Django==2.0.6
+Django==2.2.13
 django-cors-headers==2.2.0
 docker==3.3.0
 docker-compose==1.21.2
