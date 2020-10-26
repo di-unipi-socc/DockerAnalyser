@@ -122,7 +122,7 @@ Dockeranalyser-ui is running on  http://localhost:8000
 
 ### Run DockerAnalyser with docker-compose
 (#docker-compose)
-Tis guide assume that you know how to use (*docker-compose*)[https://docs.docker.com/compose/]
+This guide assumes that you know how to use (*docker-compose*)[https://docs.docker.com/compose/]
 
 The steps needed to create an *analyser* with *docker-compose* are the following:
 1. Clone the [GitHub ](https://github.com/di-unipi-socc/DockerAnalyser.git) repository of DockerAnlyser locally.
